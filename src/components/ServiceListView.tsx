@@ -164,7 +164,7 @@ const ServiceListView: React.FC<ServiceListViewProps> = ({
   };
 
   return (
-    <div className="bg-white shadow-sm border-0 border-t border-gray-200 h-full flex flex-col overflow-hidden">
+    <div className="bg-white shadow-sm border-0 border-t border-gray-200 h-full flex flex-col">
       <div className="p-2 border-b border-gray-200">
         <div className="flex items-center justify-between mb-3">
           <div className="flex items-center space-x-2">
@@ -195,7 +195,7 @@ const ServiceListView: React.FC<ServiceListViewProps> = ({
         )}
       </div>
 
-      <div className="divide-y divide-gray-100 flex-1 overflow-y-auto">
+      <div className="divide-y divide-gray-100 flex-1 overflow-y-auto" style={{ maxHeight: 'calc(100vh - 200px)' }}>
         {servicesToShow.map((service, index) => {
           const colorClasses = getColorClasses(service.color || 'blue');
           const isDragging = draggedIndex === index;

@@ -34,7 +34,7 @@ const Dashboard: React.FC<DashboardProps> = ({
   const completedServices = services.filter(service => service.status === 'completed');
 
   return (
-    <div className="px-4 pt-4 pb-0 space-y-4 flex-shrink-0">
+    <div className="px-4 pt-4 pb-2 space-y-4 flex-shrink-0 bg-gray-50">
       {/* Compact Status Cards */}
       <div className="grid grid-cols-3 gap-3">
         <button 

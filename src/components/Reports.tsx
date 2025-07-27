@@ -121,7 +121,7 @@ export default function Reports({ services, onViewService, onReorderServices }: 
   };
 
   return (
-    <div className="p-2 pb-0 space-y-2 bg-gray-50 h-full overflow-y-auto">
+    <div className="p-2 pb-0 space-y-2 bg-gray-50 h-full overflow-y-auto" style={{ maxHeight: 'calc(100vh - 200px)' }}>
       {/* Header */}
       <div className="bg-white rounded-lg shadow-sm p-2">
         <h1 className="text-sm font-bold text-gray-900 mb-2">Rapor Dönemi</h1>

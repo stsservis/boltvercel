@@ -55,7 +55,7 @@ const Notes: React.FC<NotesProps> = ({ notes, onAddNote, onEditNote, onDeleteNot
   };
 
   return (
-    <div className="px-4 pt-4 pb-0 space-y-4 h-full overflow-y-auto">
+    <div className="px-4 pt-4 pb-0 space-y-4 h-full overflow-y-auto" style={{ maxHeight: 'calc(100vh - 200px)' }}>
       {/* Header */}
       <div className="flex items-center justify-between">
         <h2 className="text-lg font-semibold text-gray-900">Notlar</h2>

@@ -426,22 +426,22 @@ function App() {
         currentPage={page}
       />
       
-      {/* Always render Dashboard for status cards and navigation */}
-      <Dashboard 
-        services={services} 
-        missingParts={missingParts}
-        onAddMissingPart={handleAddMissingPart}
-        onRemoveMissingPart={handleRemoveMissingPart}
-        currentPage={page}
-        statusFilter={statusFilter}
-        onStatusCardClick={handleStatusCardClick}
-      />
-      
-      <main className="flex-1">
-        <div className="h-full overflow-y-auto pb-0">
-        {renderPage()}
+      <div className="flex-1 flex flex-col overflow-hidden">
+        {/* Always render Dashboard for status cards and navigation */}
+        <Dashboard 
+          services={services} 
+          missingParts={missingParts}
+          onAddMissingPart={handleAddMissingPart}
+          onRemoveMissingPart={handleRemoveMissingPart}
+          currentPage={page}
+          statusFilter={statusFilter}
+          onStatusCardClick={handleStatusCardClick}
+        />
+        
+        <main className="flex-1 overflow-hidden">
+          {renderPage()}
+        </main>
         </div>
-      </main>
       
       {/* Service Detail Modal */}
       {viewingService && (
