@@ -69,8 +69,24 @@ function App() {
       const savedServices = localStorage.getItem('sts_services');
       const servicesData = savedServices ? JSON.parse(savedServices) : [];
       
+      // Migrate legacy data to new structure
+      const migratedServices = servicesData.map((service: any) => ({
+        ...service,
+        // Migrate legacy fields to new structure
+        customerPhone: service.customerPhone || service.phoneNumber || '',
+        address: service.address || service.description || '',
+        cost: service.cost || service.feeCollected || 0,
+        createdAt: service.createdAt || service.date || new Date().toISOString(),
+        updatedAt: service.updatedAt || new Date().toISOString(),
+        // Keep legacy fields for backward compatibility
+        phoneNumber: service.phoneNumber || service.customerPhone || '',
+        description: service.description || service.address || '',
+        feeCollected: service.feeCollected || service.cost || 0,
+        date: service.date || service.createdAt || new Date().toISOString().split('T')[0],
+      }));
+      
       // Apply saved order from localStorage
-      const orderedServices = applySavedOrder(servicesData);
+      const orderedServices = applySavedOrder(migratedServices);
       setServices(orderedServices);
       
       console.log('✅ Successfully loaded', orderedServices.length, 'services from localStorage');
@@ -171,7 +187,12 @@ function App() {
       setError(null);
       console.log('🔄 Creating new service in localStorage:', service);
       
-      const newService = { ...service, id: service.id || generateId() };
+      const newService = { 
+        ...service, 
+        id: service.id || generateId(),
+        createdAt: service.createdAt || new Date().toISOString(),
+        updatedAt: new Date().toISOString()
+      };
       const updatedServices = [...services, newService];
       setServices(updatedServices);
       localStorage.setItem('sts_services', JSON.stringify(updatedServices));
@@ -189,7 +210,11 @@ function App() {
       setError(null);
       console.log('🔄 Updating service in localStorage:', service);
       
-      const updatedServices = services.map(s => s.id === service.id ? service : s);
+      const updatedServices = services.map(s => 
+        s.id === service.id 
+          ? { ...service, updatedAt: new Date().toISOString() }
+          : s
+      );
       setServices(updatedServices);
       localStorage.setItem('sts_services', JSON.stringify(updatedServices));
       setPage('dashboard');
@@ -240,8 +265,21 @@ function App() {
 
   const handleExportData = () => {
     try {
+      // Transform services to ensure they use the new structure
+      const transformedServices = services.map(service => ({
+        id: service.id,
+        customerPhone: service.customerPhone || service.phoneNumber || '',
+        address: service.address || service.description || '',
+        color: service.color || 'white',
+        cost: service.cost || service.feeCollected || 0,
+        expenses: service.expenses || 0,
+        status: service.status,
+        createdAt: service.createdAt || service.date || new Date().toISOString(),
+        updatedAt: service.updatedAt || new Date().toISOString()
+      }));
+
       const data = {
-        services,
+        services: transformedServices,
         notes,
         missingParts,
         exportDate: new Date().toISOString()
@@ -269,21 +307,26 @@ function App() {
         try {
           const data = JSON.parse(event.target?.result as string);
           
+          // Check if this is a lovable.json format (nested data structure)
+          const actualData = data.data ? data.data : data;
+          
           // Import data to localStorage
-          if (data.services) {
-            localStorage.setItem('sts_services', JSON.stringify(data.services));
-            setServices(data.services);
+          if (actualData.services) {
+            localStorage.setItem('sts_services', JSON.stringify(actualData.services));
           }
-          if (data.notes) {
-            localStorage.setItem('sts_notes', JSON.stringify(data.notes));
-            setNotes(data.notes);
+          if (actualData.notes) {
+            localStorage.setItem('sts_notes', JSON.stringify(actualData.notes));
           }
-          if (data.missingParts) {
-            localStorage.setItem('sts_missing_parts', JSON.stringify(data.missingParts));
-            setMissingParts(data.missingParts);
+          if (actualData.missingParts) {
+            localStorage.setItem('sts_missing_parts', JSON.stringify(actualData.missingParts));
           }
           
-          alert('Veriler başarıyla yüklendi');
+          // Reload all data from localStorage to ensure proper state update
+          loadData();
+          
+          const serviceCount = actualData.services ? actualData.services.length : 0;
+          const noteCount = actualData.notes ? actualData.notes.length : 0;
+          alert(`Veriler başarıyla yüklendi!\n${serviceCount} servis kaydı ve ${noteCount} not geri yüklendi.`);
         } catch (error) {
           alert('Dosya formatı geçersiz');
         }
@@ -346,7 +389,7 @@ function App() {
   };
 
   return (
-    <div className="min-h-screen bg-gray-50">
+    <div className="min-h-screen bg-gray-50 pb-0">
       {/* Loading State */}
       {loading && (
         <div className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50">
@@ -392,7 +435,7 @@ function App() {
         onStatusCardClick={handleStatusCardClick}
       />
       
-      <main>
+      <main className="pb-0">
         {renderPage()}
       </main>
       

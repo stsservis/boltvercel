@@ -1,7 +1,8 @@
 import React from 'react';
+import { useState } from 'react';
 import { ServiceRecord } from '../types';
 import { formatCurrency, formatDate } from '../utils/helpers';
-import { XIcon, PhoneIcon, CalendarIcon, DollarSignIcon } from 'lucide-react';
+import { XIcon, PhoneIcon, CalendarIcon, DollarSignIcon, ChevronDownIcon, ChevronUpIcon } from 'lucide-react';
 
 interface ServiceDetailProps {
   service: ServiceRecord;
@@ -10,12 +11,16 @@ interface ServiceDetailProps {
 }
 
 const ServiceDetail: React.FC<ServiceDetailProps> = ({ service, onClose, onEdit }) => {
-  const profit = service.feeCollected - service.expenses;
+  const [showCalculations, setShowCalculations] = useState(false);
+  
+  const cost = service.cost || service.feeCollected || 0;
+  const profit = cost - service.expenses;
   const profitPercentage30 = profit * 0.3;
   const netProfit = profit - profitPercentage30;
 
   const handlePhoneClick = () => {
-    window.location.href = `tel:${service.phoneNumber}`;
+    const phone = service.customerPhone || service.phoneNumber || '';
+    window.location.href = `tel:${phone}`;
   };
 
   const getStatusText = (status: string) => {
@@ -60,11 +65,11 @@ const ServiceDetail: React.FC<ServiceDetailProps> = ({ service, onClose, onEdit 
                 className="flex items-center space-x-2 text-blue-600 hover:text-blue-800"
               >
                 <PhoneIcon className="h-4 w-4" />
-                <span className="text-sm font-medium">{service.phoneNumber}</span>
+                <span className="text-sm font-medium">{service.customerPhone || service.phoneNumber}</span>
               </button>
               <div className="flex items-center space-x-2 text-gray-600">
                 <CalendarIcon className="h-4 w-4" />
-                <span className="text-sm">{formatDate(service.date)}</span>
+                <span className="text-sm">{service.createdAt ? new Date(service.createdAt).toLocaleDateString('tr-TR') : formatDate(service.date || '')}</span>
               </div>
             </div>
           </div>
@@ -79,13 +84,13 @@ const ServiceDetail: React.FC<ServiceDetailProps> = ({ service, onClose, onEdit 
 
           {/* Description */}
           <div>
-            <h3 className="text-sm font-medium text-gray-900 mb-2">Açıklama</h3>
+            <h3 className="text-sm font-medium text-gray-900 mb-2">Adres</h3>
             <p className="text-sm text-gray-700 bg-gray-50 rounded-lg p-3 break-words whitespace-pre-wrap word-wrap break-word overflow-hidden">
-              {service.description}
+              {service.address || service.description}
             </p>
           </div>
 
-          {/* Parts Changed */}
+          {/* Legacy Parts Changed - only show if exists */}
           {service.partsChanged && (
             <div>
               <h3 className="text-sm font-medium text-gray-900 mb-2">Değiştirilen Parçalar</h3>
@@ -97,37 +102,49 @@ const ServiceDetail: React.FC<ServiceDetailProps> = ({ service, onClose, onEdit 
 
           {/* Financial Information */}
           <div className="bg-blue-50 rounded-lg p-3">
-            <h3 className="text-sm font-medium text-gray-900 mb-3 flex items-center">
-              <DollarSignIcon className="h-4 w-4 mr-1" />
-              Kâr Hesaplaması
-            </h3>
+            <button
+              onClick={() => setShowCalculations(!showCalculations)}
+              className="w-full text-sm font-medium text-gray-900 mb-3 flex items-center justify-between hover:text-blue-600 transition-colors"
+            >
+              <div className="flex items-center">
+                <DollarSignIcon className="h-4 w-4 mr-1" />
+                Hesap
+              </div>
+              {showCalculations ? (
+                <ChevronUpIcon className="h-4 w-4" />
+              ) : (
+                <ChevronDownIcon className="h-4 w-4" />
+              )}
+            </button>
             
-            <div className="space-y-2 text-sm">
-              <div className="flex justify-between items-center">
-                <span className="text-gray-600">Alınan Ücret:</span>
-                <span className="font-medium text-green-600">{formatCurrency(service.feeCollected)}</span>
+            {showCalculations && (
+              <div className="space-y-2 text-sm">
+                <div className="flex justify-between items-center">
+                  <span className="text-gray-600">Alınan Ücret:</span>
+                  <span className="font-medium text-green-600">{formatCurrency(cost)}</span>
+                </div>
+                <div className="flex justify-between items-center">
+                  <span className="text-gray-600">Yapılan Gider:</span>
+                  <span className="font-medium text-red-600">{formatCurrency(service.expenses)}</span>
+                </div>
+                <div className="flex justify-between items-center border-t pt-2">
+                  <span className="text-gray-600">Net Kâr:</span>
+                  <span className={`font-medium ${profit >= 0 ? 'text-blue-600' : 'text-red-600'}`}>
+                    {formatCurrency(profit)}
+                  </span>
+                </div>
+                <div className="flex justify-between items-center">
+                  <span className="text-gray-600">Kâr Payı (%30):</span>
+                  <span className="font-medium text-orange-600">{formatCurrency(profitPercentage30)}</span>
+                </div>
+                <div className="flex justify-between items-center border-t pt-2">
+                  <span className="text-gray-600">Kalan Tutar:</span>
+                  <span className={`font-bold ${netProfit >= 0 ? 'text-green-600' : 'text-red-600'}`}>
+                    {formatCurrency(netProfit)}
+                  </span>
+                </div>
               </div>
-              <div className="flex justify-between items-center">
-                <span className="text-gray-600">Yapılan Gider:</span>
-                <span className="font-medium text-red-600">{formatCurrency(service.expenses)}</span>
-              </div>
-              <div className="flex justify-between items-center border-t pt-2">
-                <span className="text-gray-600">Net Kâr:</span>
-                <span className={`font-medium ${profit >= 0 ? 'text-blue-600' : 'text-red-600'}`}>
-                  {formatCurrency(profit)}
-                </span>
-              </div>
-              <div className="flex justify-between items-center">
-                <span className="text-gray-600">Kâr Payı (%30):</span>
-                <span className="font-medium text-orange-600">{formatCurrency(profitPercentage30)}</span>
-              </div>
-              <div className="flex justify-between items-center border-t pt-2">
-                <span className="text-gray-600">Kalan Tutar:</span>
-                <span className={`font-bold ${netProfit >= 0 ? 'text-green-600' : 'text-red-600'}`}>
-                  {formatCurrency(netProfit)}
-                </span>
-              </div>
-            </div>
+            )}
           </div>
 
           {/* Actions */}

@@ -25,56 +25,84 @@ const ServiceForm: React.FC<ServiceFormProps> = ({
   
   const [formData, setFormData] = useState<ServiceRecord>({
     id: '',
-    phoneNumber: '',
-    date: today,
-    feeCollected: 0,
-    expenses: 0,
-    quotedPrice: 0,
-    description: '',
-    partsChanged: '',
-    missingParts: '',
-    status: 'ongoing',
+    customerPhone: '',
+    address: '',
     color: 'white',
+    cost: 0,
+    expenses: 0,
+    status: 'ongoing',
+    createdAt: new Date().toISOString(),
+    updatedAt: new Date().toISOString(),
   });
 
+  // Format phone number from +90 to 0 format
+  const formatPhoneNumber = (phone: string): string => {
+    // Only remove spaces and some special characters, keep letters and numbers
+    let cleaned = phone.replace(/[\s\-\(\)]/g, '');
+    
+    // If starts with +90, replace with 0
+    if (cleaned.startsWith('+90')) {
+      cleaned = '0' + cleaned.substring(3);
+    }
+    
+    return cleaned;
+  };
   useEffect(() => {
     if (service) {
-      setFormData(service);
+      setFormData({
+        ...service,
+        // Migrate legacy fields if they exist
+        customerPhone: service.customerPhone || service.phoneNumber || '',
+        address: service.address || service.description || '',
+        cost: service.cost || service.feeCollected || 0,
+        updatedAt: new Date().toISOString(),
+      });
     } else {
+      // Always reset form when no service is provided (new service)
       setFormData({
         id: generateId(),
-        phoneNumber: '',
-        date: today,
-        feeCollected: 0,
-        expenses: 0,
-        quotedPrice: 0,
-        description: '',
-        partsChanged: '',
-        missingParts: '',
-        status: 'ongoing',
+        customerPhone: '',
+        address: '',
         color: 'white',
+        cost: 0,
+        expenses: 0,
+        status: 'ongoing',
+        createdAt: new Date().toISOString(),
+        updatedAt: new Date().toISOString(),
       });
     }
-  }, [service, today]);
+  }, [service]); // Remove today dependency to prevent unnecessary re-renders
 
   const handleChange = (
     e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement | HTMLSelectElement>
   ) => {
     const { name, value } = e.target;
+    
+    let processedValue = value;
+    
+    // Format phone number if it's the customerPhone field
+    if (name === 'customerPhone') {
+      processedValue = formatPhoneNumber(value);
+    }
+    
     setFormData((prev) => ({
       ...prev,
-      [name]: name === 'feeCollected' || name === 'expenses' || name === 'quotedPrice' 
-        ? parseFloat(value) || 0 
-        : value,
+      [name]: name === 'cost' || name === 'expenses'
+        ? parseFloat(processedValue) || 0 
+        : processedValue,
+      updatedAt: new Date().toISOString(),
     }));
   };
 
   const handleSubmit = (e: React.FormEvent) => {
     e.preventDefault();
-    onSave(formData);
+    onSave({
+      ...formData,
+      updatedAt: new Date().toISOString(),
+    });
   };
 
-  const profit = formData.feeCollected - formData.expenses;
+  const profit = formData.cost - formData.expenses;
   const profitPercentage30 = profit * 0.3;
   const netProfit = profit - profitPercentage30;
 
@@ -101,34 +129,57 @@ const ServiceForm: React.FC<ServiceFormProps> = ({
           </p>
         </div>
 
+        {/* Service Date */}
+        <div>
+          <label htmlFor="serviceDate" className="block text-sm font-medium text-gray-700 mb-1">
+            Servis Tarihi
+          </label>
+          <input
+            type="date"
+            id="serviceDate"
+            name="serviceDate"
+            value={formData.createdAt ? formData.createdAt.split('T')[0] : new Date().toISOString().split('T')[0]}
+            onChange={(e) => {
+              const selectedDate = e.target.value;
+              const dateTime = new Date(selectedDate + 'T' + new Date().toTimeString().split(' ')[0]).toISOString();
+              setFormData(prev => ({
+                ...prev,
+                createdAt: dateTime,
+                updatedAt: new Date().toISOString(),
+              }));
+            }}
+            className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent text-sm"
+          />
+        </div>
+
         <form onSubmit={handleSubmit} className="p-4 space-y-4">
           {/* Description - Moved to top */}
           <div>
-            <label htmlFor="description" className="block text-sm font-medium text-gray-700 mb-1">
+            <label htmlFor="address" className="block text-sm font-medium text-gray-700 mb-1">
               Adres *
             </label>
             <textarea
-              id="description"
-              name="description"
-              value={formData.description}
+              id="address"
+              name="address"
+              value={formData.address}
               onChange={handleChange}
               rows={3}
               required
               className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent text-sm"
-              placeholder="Yapılan işlem açıklaması..."
+              placeholder="Müşteri adresi..."
             />
           </div>
 
           {/* Phone Number */}
           <div>
-            <label htmlFor="phoneNumber" className="block text-sm font-medium text-gray-700 mb-1">
+            <label htmlFor="customerPhone" className="block text-sm font-medium text-gray-700 mb-1">
               Telefon Numarası *
             </label>
             <input
-              type="tel"
-              id="phoneNumber"
-              name="phoneNumber"
-              value={formData.phoneNumber}
+              type="text"
+              id="customerPhone"
+              name="customerPhone"
+              value={formData.customerPhone}
               onChange={handleChange}
               required
               className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent text-sm"
@@ -136,23 +187,8 @@ const ServiceForm: React.FC<ServiceFormProps> = ({
             />
           </div>
 
-          {/* Date, Status, Color */}
+          {/* Status, Color */}
           <div className="grid grid-cols-1 gap-4">
-            <div>
-              <label htmlFor="date" className="block text-sm font-medium text-gray-700 mb-1">
-                Tarih
-              </label>
-              <input
-                type="date"
-                id="date"
-                name="date"
-                value={formData.date}
-                onChange={handleChange}
-                required
-                className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent text-sm"
-              />
-            </div>
-
             <div>
               <label htmlFor="status" className="block text-sm font-medium text-gray-700 mb-1">
                 Durum
@@ -208,14 +244,14 @@ const ServiceForm: React.FC<ServiceFormProps> = ({
             
             <div className="grid grid-cols-2 gap-3 mb-4">
               <div>
-                <label htmlFor="feeCollected" className="block text-sm font-medium text-gray-700 mb-1">
+                <label htmlFor="cost" className="block text-sm font-medium text-gray-700 mb-1">
                   Alınan Ücret (TL)
                 </label>
                 <input
                   type="number"
-                  id="feeCollected"
-                  name="feeCollected"
-                  value={formData.feeCollected || ''}
+                  id="cost"
+                  name="cost"
+                  value={formData.cost || ''}
                   onChange={handleChange}
                   min="0"
                   step="0.01"
@@ -249,7 +285,7 @@ const ServiceForm: React.FC<ServiceFormProps> = ({
               <div className="space-y-1 text-sm">
                 <div className="flex justify-between items-center">
                   <span className="text-gray-600">Alınan Ücret:</span>
-                  <span className="font-medium text-green-600">{formatCurrency(formData.feeCollected)}</span>
+                  <span className="font-medium text-green-600">{formatCurrency(formData.cost)}</span>
                 </div>
                 <div className="flex justify-between items-center">
                   <span className="text-gray-600">Yapılan Gider:</span>

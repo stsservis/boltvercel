@@ -19,7 +19,7 @@ export default function Reports({ services, onViewService, onReorderServices }: 
 
   // Filter services by selected month and year
   const filteredServices = services.filter(service => {
-    const serviceDate = new Date(service.date);
+    const serviceDate = service.createdAt ? new Date(service.createdAt) : new Date(service.date || '');
     return service.status === 'completed' &&
            serviceDate.getMonth() + 1 === selectedMonth && 
            serviceDate.getFullYear() === selectedYear;
@@ -27,20 +27,20 @@ export default function Reports({ services, onViewService, onReorderServices }: 
 
   // Filter yearly services
   const yearlyServices = services.filter(service => {
-    const serviceDate = new Date(service.date);
+    const serviceDate = service.createdAt ? new Date(service.createdAt) : new Date(service.date || '');
     return service.status === 'completed' &&
            serviceDate.getFullYear() === selectedYear;
   });
 
   // Calculate monthly financial data
-  const monthlyRevenue = filteredServices.reduce((sum, service) => sum + service.feeCollected, 0);
+  const monthlyRevenue = filteredServices.reduce((sum, service) => sum + (service.cost || service.feeCollected || 0), 0);
   const monthlyExpenses = filteredServices.reduce((sum, service) => sum + service.expenses, 0);
   const monthlyNetProfit = monthlyRevenue - monthlyExpenses;
   const monthlyProfitShare = monthlyNetProfit * 0.3;
   const monthlyRemaining = monthlyNetProfit - monthlyProfitShare;
 
   // Calculate yearly financial data
-  const yearlyRevenue = yearlyServices.reduce((sum, service) => sum + service.feeCollected, 0);
+  const yearlyRevenue = yearlyServices.reduce((sum, service) => sum + (service.cost || service.feeCollected || 0), 0);
   const yearlyExpenses = yearlyServices.reduce((sum, service) => sum + service.expenses, 0);
   const yearlyNetProfit = yearlyRevenue - yearlyExpenses;
   const yearlyProfitShare = yearlyNetProfit * 0.3;
@@ -275,7 +275,8 @@ export default function Reports({ services, onViewService, onReorderServices }: 
             
             <tbody className="bg-white divide-y divide-gray-200">
               {filteredServices.map((service, index) => {
-                const profit = service.feeCollected - service.expenses;
+                const cost = service.cost || service.feeCollected || 0;
+                const profit = cost - service.expenses;
                 const profitShare = profit * 0.3;
                 const remaining = profit - profitShare;
                 const isDragging = draggedIndex === index;
@@ -298,19 +299,19 @@ export default function Reports({ services, onViewService, onReorderServices }: 
                         <div className="mr-1 cursor-grab">
                           <GripVerticalIcon className="h-3 w-3 text-gray-400" />
                         </div>
-                        {formatDate(service.date).split('.').slice(0, 2).join('.')}
+                        {service.createdAt ? new Date(service.createdAt).toLocaleDateString('tr-TR').split('.').slice(0, 2).join('.') : formatDate(service.date || '').split('.').slice(0, 2).join('.')}
                       </div>
                     </td>
                     <td className="px-2 py-1.5 text-xs text-gray-900 max-w-xs">
-                      <div className="truncate" title={service.description}>
-                        {service.description}
+                      <div className="truncate" title={service.address || service.description}>
+                        {service.address || service.description}
                       </div>
                     </td>
                     <td className="px-2 py-1.5 whitespace-nowrap text-xs text-blue-600 font-medium">
-                      {service.phoneNumber}
+                      {service.customerPhone || service.phoneNumber}
                     </td>
                     <td className="px-2 py-1.5 whitespace-nowrap text-xs text-green-600 font-medium">
-                      {service.feeCollected.toLocaleString('tr-TR')}
+                      {(service.cost || service.feeCollected || 0).toLocaleString('tr-TR')}
                     </td>
                     <td className="px-2 py-1.5 whitespace-nowrap text-xs text-red-600 font-medium">
                       {service.expenses.toLocaleString('tr-TR')}

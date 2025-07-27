@@ -28,26 +28,26 @@ export const calculateDashboardStats = (
   const currentYear = now.getFullYear();
 
   const monthlyServices = services.filter(service => {
-    const serviceDate = new Date(service.date);
+    const serviceDate = service.createdAt ? new Date(service.createdAt) : new Date(service.date || '');
     return serviceDate.getMonth() === currentMonth && 
            serviceDate.getFullYear() === currentYear;
   });
 
   const yearlyServices = services.filter(service => {
-    const serviceDate = new Date(service.date);
+    const serviceDate = service.createdAt ? new Date(service.createdAt) : new Date(service.date || '');
     return serviceDate.getFullYear() === currentYear;
   });
 
   const totalServices = services.length;
-  const totalRevenue = services.reduce((sum, service) => sum + service.feeCollected, 0);
+  const totalRevenue = services.reduce((sum, service) => sum + (service.cost || service.feeCollected || 0), 0);
   const totalExpenses = services.reduce((sum, service) => sum + service.expenses, 0);
   const profit = totalRevenue - totalExpenses;
 
-  const monthlyRevenue = monthlyServices.reduce((sum, service) => sum + service.feeCollected, 0);
+  const monthlyRevenue = monthlyServices.reduce((sum, service) => sum + (service.cost || service.feeCollected || 0), 0);
   const monthlyExpenses = monthlyServices.reduce((sum, service) => sum + service.expenses, 0);
   const monthlyProfit = monthlyRevenue - monthlyExpenses;
 
-  const yearlyRevenue = yearlyServices.reduce((sum, service) => sum + service.feeCollected, 0);
+  const yearlyRevenue = yearlyServices.reduce((sum, service) => sum + (service.cost || service.feeCollected || 0), 0);
   const yearlyExpenses = yearlyServices.reduce((sum, service) => sum + service.expenses, 0);
   const yearlyProfit = yearlyRevenue - yearlyExpenses;
 

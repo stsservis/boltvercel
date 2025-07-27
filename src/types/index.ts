@@ -1,15 +1,21 @@
 export interface ServiceRecord {
   id: string;
-  phoneNumber: string;
-  date: string;
-  feeCollected: number;
-  expenses: number;
-  quotedPrice: number;
-  description: string;
-  partsChanged: string;
-  missingParts: string;
-  status: 'ongoing' | 'completed' | 'workshop';
+  customerPhone: string;
+  address: string;
   color?: string;
+  cost: number;
+  expenses: number;
+  status: 'ongoing' | 'completed' | 'workshop';
+  createdAt: string;
+  updatedAt: string;
+  // Legacy fields for backward compatibility
+  date?: string;
+  phoneNumber?: string;
+  feeCollected?: number;
+  quotedPrice?: number;
+  description?: string;
+  partsChanged?: string;
+  missingParts?: string;
 }
 
 export interface DashboardStats {
