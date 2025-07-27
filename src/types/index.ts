@@ -8,6 +8,7 @@ export interface ServiceRecord {
   status: 'ongoing' | 'completed' | 'workshop';
   createdAt: string;
   updatedAt: string;
+  order?: number;
   // Legacy fields for backward compatibility
   date?: string;
   phoneNumber?: string;

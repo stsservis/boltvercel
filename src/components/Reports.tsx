@@ -77,28 +77,42 @@ export default function Reports({ services, onViewService, onReorderServices }: 
   const handleDrop = (e: React.DragEvent, dropIndex: number) => {
     e.preventDefault();
     
-    if (draggedIndex === null || draggedIndex === dropIndex || !onReorderServices) {
+    if (draggedIndex === null || draggedIndex === dropIndex) {
       setDraggedIndex(null);
       return;
     }
 
-    // Reorder the filtered services
-    const reorderedFilteredServices = Array.from(filteredServices);
-    const [reorderedItem] = reorderedFilteredServices.splice(draggedIndex, 1);
-    reorderedFilteredServices.splice(dropIndex, 0, reorderedItem);
+    // Create a copy of the filtered services for reordering
+    const reorderedServices = [...filteredServices];
+    const [draggedService] = reorderedServices.splice(draggedIndex, 1);
+    reorderedServices.splice(dropIndex, 0, draggedService);
 
-    // Update the main services array with new order
+    // Create a new services array with the reordered filtered services
+    const serviceMap = new Map(reorderedServices.map((service, index) => [service.id, { ...service, order: index }]));
+    
     const updatedServices = services.map(service => {
-      const index = reorderedFilteredServices.findIndex(item => item.id === service.id);
-      if (index !== -1) {
-        return reorderedFilteredServices[index];
+      if (serviceMap.has(service.id)) {
+        return serviceMap.get(service.id)!;
       }
       return service;
     });
 
-    // Save the new order
-    saveServiceOrder(updatedServices);
-    onReorderServices(updatedServices);
+    // Sort by the new order for filtered services, keep others in original position
+    const finalServices = updatedServices.sort((a, b) => {
+      const aInFiltered = serviceMap.has(a.id);
+      const bInFiltered = serviceMap.has(b.id);
+      
+      if (aInFiltered && bInFiltered) {
+        return (a.order || 0) - (b.order || 0);
+      }
+      if (aInFiltered && !bInFiltered) return -1;
+      if (!aInFiltered && bInFiltered) return 1;
+      return 0;
+    });
+
+    if (onReorderServices) {
+      onReorderServices(finalServices);
+    }
     setDraggedIndex(null);
   };
 
@@ -107,7 +121,7 @@ export default function Reports({ services, onViewService, onReorderServices }: 
   };
 
   return (
-    <div className="p-2 space-y-2 bg-gray-50 min-h-screen">
+    <div className="p-2 pb-0 space-y-2 bg-gray-50 h-full overflow-y-auto">
       {/* Header */}
       <div className="bg-white rounded-lg shadow-sm p-2">
         <h1 className="text-sm font-bold text-gray-900 mb-2">Rapor Dönemi</h1>

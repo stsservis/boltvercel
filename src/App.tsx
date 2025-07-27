@@ -120,6 +120,7 @@ function App() {
 
   const handleAddService = () => {
     setSelectedService(undefined);
+    setSelectedService(undefined);
     setPage('newService');
   };
 
@@ -143,9 +144,10 @@ function App() {
   };
 
   const handleReorderServices = (reorderedServices: ServiceRecord[]) => {
-    // Save new order to localStorage
-    saveServiceOrder(reorderedServices);
+    // Update services state and save to localStorage
     setServices(reorderedServices);
+    saveServiceOrder(reorderedServices);
+    localStorage.setItem('sts_services', JSON.stringify(reorderedServices));
   };
 
   const handleAddMissingPart = (missingPart: string) => {
@@ -389,7 +391,7 @@ function App() {
   };
 
   return (
-    <div className="min-h-screen bg-gray-50 pb-0">
+    <div className="h-screen bg-gray-50 flex flex-col overflow-hidden">
       {/* Loading State */}
       {loading && (
         <div className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50">
@@ -435,8 +437,10 @@ function App() {
         onStatusCardClick={handleStatusCardClick}
       />
       
-      <main className="pb-0">
+      <main className="flex-1">
+        <div className="h-full overflow-y-auto pb-0">
         {renderPage()}
+        </div>
       </main>
       
       {/* Service Detail Modal */}

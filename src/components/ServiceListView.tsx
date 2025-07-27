@@ -120,28 +120,42 @@ const ServiceListView: React.FC<ServiceListViewProps> = ({
   const handleDrop = (e: React.DragEvent, dropIndex: number) => {
     e.preventDefault();
     
-    if (draggedIndex === null || draggedIndex === dropIndex || !onReorderServices) {
+    if (draggedIndex === null || draggedIndex === dropIndex) {
       setDraggedIndex(null);
       return;
     }
 
-    // Reorder the filtered services
-    const reorderedFilteredServices = Array.from(servicesToShow);
-    const [reorderedItem] = reorderedFilteredServices.splice(draggedIndex, 1);
-    reorderedFilteredServices.splice(dropIndex, 0, reorderedItem);
+    // Create a copy of the filtered services for reordering
+    const reorderedServices = [...servicesToShow];
+    const [draggedService] = reorderedServices.splice(draggedIndex, 1);
+    reorderedServices.splice(dropIndex, 0, draggedService);
 
-    // Update the main services array with new order
+    // Create a new services array with the reordered filtered services
+    const serviceMap = new Map(reorderedServices.map((service, index) => [service.id, { ...service, order: index }]));
+    
     const updatedServices = services.map(service => {
-      const index = reorderedFilteredServices.findIndex(item => item.id === service.id);
-      if (index !== -1) {
-        return reorderedFilteredServices[index];
+      if (serviceMap.has(service.id)) {
+        return serviceMap.get(service.id)!;
       }
       return service;
     });
 
-    // Save the new order
-    saveServiceOrder(updatedServices);
-    onReorderServices(updatedServices);
+    // Sort by the new order for filtered services, keep others in original position
+    const finalServices = updatedServices.sort((a, b) => {
+      const aInFiltered = serviceMap.has(a.id);
+      const bInFiltered = serviceMap.has(b.id);
+      
+      if (aInFiltered && bInFiltered) {
+        return (a.order || 0) - (b.order || 0);
+      }
+      if (aInFiltered && !bInFiltered) return -1;
+      if (!aInFiltered && bInFiltered) return 1;
+      return 0;
+    });
+
+    if (onReorderServices) {
+      onReorderServices(finalServices);
+    }
     setDraggedIndex(null);
   };
 
@@ -150,7 +164,7 @@ const ServiceListView: React.FC<ServiceListViewProps> = ({
   };
 
   return (
-    <div className="bg-white rounded-lg shadow-sm border border-gray-200 mb-0">
+    <div className="bg-white shadow-sm border-0 border-t border-gray-200 h-full flex flex-col overflow-hidden">
       <div className="p-2 border-b border-gray-200">
         <div className="flex items-center justify-between mb-3">
           <div className="flex items-center space-x-2">
@@ -181,7 +195,7 @@ const ServiceListView: React.FC<ServiceListViewProps> = ({
         )}
       </div>
 
-      <div className="divide-y divide-gray-100 max-h-80 overflow-y-auto min-h-[80px]">
+      <div className="divide-y divide-gray-100 flex-1 overflow-y-auto">
         {servicesToShow.map((service, index) => {
           const colorClasses = getColorClasses(service.color || 'blue');
           const isDragging = draggedIndex === index;
@@ -265,9 +279,9 @@ const ServiceListView: React.FC<ServiceListViewProps> = ({
           );
         })}
       </div>
-        
+
       {servicesToShow.length === 0 && statusFilter !== 'all' && (
-        <div className="p-4 text-center text-gray-500 text-sm">
+        <div className="p-3 text-center text-gray-500 text-sm">
           {searchTerm ? 'Arama sonucuna uygun kayıt bulunamadı' : 'Henüz servis kaydı bulunmuyor'}
         </div>
       )}
@@ -324,12 +338,12 @@ const ServiceListView: React.FC<ServiceListViewProps> = ({
       )}
       
       {statusFilter === 'all' && (
-        <div className="p-6 text-center text-gray-500">
+        <div className="p-3 pb-0 text-center text-gray-500 flex-1 flex flex-col justify-center">
           <h3 className="text-lg font-medium text-gray-700 mb-2">Kategori seçin</h3>
           <p className="text-sm text-gray-500 mb-3">
             Servisleri görmek için yukarıdan bir kategori seçin
           </p>
-          <p className="text-xs text-blue-600 cursor-pointer hover:text-blue-800">
+          <p className="text-xs text-blue-600 cursor-pointer hover:text-blue-800 mb-0">
             Toplam {services.length} servis mevcut
           </p>
         </div>

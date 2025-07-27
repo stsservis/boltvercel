@@ -59,8 +59,9 @@ const ServiceForm: React.FC<ServiceFormProps> = ({
       });
     } else {
       // Always reset form when no service is provided (new service)
+      const newId = generateId();
       setFormData({
-        id: generateId(),
+        id: newId,
         customerPhone: '',
         address: '',
         color: 'white',
@@ -71,7 +72,7 @@ const ServiceForm: React.FC<ServiceFormProps> = ({
         updatedAt: new Date().toISOString(),
       });
     }
-  }, [service]); // Remove today dependency to prevent unnecessary re-renders
+  }, [service, today]); // Add today back to ensure fresh data on date changes
 
   const handleChange = (
     e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement | HTMLSelectElement>
@@ -129,29 +130,6 @@ const ServiceForm: React.FC<ServiceFormProps> = ({
           </p>
         </div>
 
-        {/* Service Date */}
-        <div>
-          <label htmlFor="serviceDate" className="block text-sm font-medium text-gray-700 mb-1">
-            Servis Tarihi
-          </label>
-          <input
-            type="date"
-            id="serviceDate"
-            name="serviceDate"
-            value={formData.createdAt ? formData.createdAt.split('T')[0] : new Date().toISOString().split('T')[0]}
-            onChange={(e) => {
-              const selectedDate = e.target.value;
-              const dateTime = new Date(selectedDate + 'T' + new Date().toTimeString().split(' ')[0]).toISOString();
-              setFormData(prev => ({
-                ...prev,
-                createdAt: dateTime,
-                updatedAt: new Date().toISOString(),
-              }));
-            }}
-            className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent text-sm"
-          />
-        </div>
-
         <form onSubmit={handleSubmit} className="p-4 space-y-4">
           {/* Description - Moved to top */}
           <div>
@@ -184,6 +162,29 @@ const ServiceForm: React.FC<ServiceFormProps> = ({
               required
               className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent text-sm"
               placeholder="05XX XXX XX XX"
+            />
+          </div>
+
+          {/* Service Date - Moved after phone number */}
+          <div>
+            <label htmlFor="serviceDate" className="block text-sm font-medium text-gray-700 mb-1">
+              Servis Tarihi
+            </label>
+            <input
+              type="date"
+              id="serviceDate"
+              name="serviceDate"
+              value={formData.createdAt ? formData.createdAt.split('T')[0] : new Date().toISOString().split('T')[0]}
+              onChange={(e) => {
+                const selectedDate = e.target.value;
+                const dateTime = new Date(selectedDate + 'T' + new Date().toTimeString().split(' ')[0]).toISOString();
+                setFormData(prev => ({
+                  ...prev,
+                  createdAt: dateTime,
+                  updatedAt: new Date().toISOString(),
+                }));
+              }}
+              className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent text-sm"
             />
           </div>
 

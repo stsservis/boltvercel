@@ -23,7 +23,7 @@ const Backup: React.FC<BackupProps> = ({ onExportData, onImportData, servicesCou
   };
 
   return (
-    <div className="px-3 py-3 space-y-3">
+    <div className="px-3 pt-3 pb-0 space-y-3 h-full overflow-y-auto">
       {/* Stats Cards */}
       <div className="grid grid-cols-2 gap-3">
         <div className="bg-blue-50 rounded-lg p-3 border border-blue-200">

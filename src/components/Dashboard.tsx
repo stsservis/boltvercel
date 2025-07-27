@@ -34,7 +34,7 @@ const Dashboard: React.FC<DashboardProps> = ({
   const completedServices = services.filter(service => service.status === 'completed');
 
   return (
-    <div className="px-4 py-4 space-y-4">
+    <div className="px-4 pt-4 pb-0 space-y-4 flex-shrink-0">
       {/* Compact Status Cards */}
       <div className="grid grid-cols-3 gap-3">
         <button 
@@ -84,7 +84,7 @@ const Dashboard: React.FC<DashboardProps> = ({
       </div>
 
       {/* Navigation Tabs */}
-      <div className="bg-white rounded-lg shadow-sm border border-gray-200 mb-4">
+      <div className="bg-white rounded-lg shadow-sm border border-gray-200">
         <div className="grid grid-cols-4 gap-1 p-2">
           <button
             onClick={() => {
