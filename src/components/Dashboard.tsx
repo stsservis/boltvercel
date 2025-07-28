@@ -34,12 +34,12 @@ const Dashboard: React.FC<DashboardProps> = ({
   const completedServices = services.filter(service => service.status === 'completed');
 
   return (
-    <div className="px-2 pt-2 pb-1.5 space-y-1.5 bg-gray-50">
+    <div className="px-2 pt-2 pb-1.5 space-y-1.5">
       {/* Compact Status Cards */}
       <div className="grid grid-cols-3 gap-1">
         <button 
           onClick={() => onStatusCardClick('ongoing')}
-          className={`bg-gradient-to-r from-yellow-400 to-orange-500 rounded-md p-2 text-white transition-all duration-200 min-h-[50px] shadow-sm hover:shadow-md ${
+          className={`bg-gradient-to-br from-yellow-400 to-yellow-600 shimmer rounded-md p-2 text-white transition-all duration-200 min-h-[50px] shadow-sm hover:shadow-md ${
             statusFilter === 'ongoing' ? 'ring-2 ring-yellow-300 ring-offset-2 scale-105' : 'hover:scale-105'
           }`}
         >
@@ -54,7 +54,7 @@ const Dashboard: React.FC<DashboardProps> = ({
 
         <button 
           onClick={() => onStatusCardClick('workshop')}
-          className={`bg-gradient-to-r from-orange-500 to-red-500 rounded-md p-2 text-white transition-all duration-200 min-h-[50px] shadow-sm hover:shadow-md ${
+          className={`bg-gradient-to-br from-orange-400 to-orange-600 shimmer rounded-md p-2 text-white transition-all duration-200 min-h-[50px] shadow-sm hover:shadow-md ${
             statusFilter === 'workshop' ? 'ring-2 ring-orange-300 ring-offset-2 scale-105' : 'hover:scale-105'
           }`}
         >
@@ -69,7 +69,7 @@ const Dashboard: React.FC<DashboardProps> = ({
 
         <button 
           onClick={() => onStatusCardClick('completed')}
-          className={`bg-gradient-to-r from-green-500 to-emerald-500 rounded-md p-2 text-white transition-all duration-200 min-h-[50px] shadow-sm hover:shadow-md ${
+          className={`bg-gradient-to-br from-green-400 to-green-600 shimmer rounded-md p-2 text-white transition-all duration-200 min-h-[50px] shadow-sm hover:shadow-md ${
             statusFilter === 'completed' ? 'ring-2 ring-green-300 ring-offset-2 scale-105' : 'hover:scale-105'
           }`}
         >

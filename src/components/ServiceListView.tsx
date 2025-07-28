@@ -180,7 +180,7 @@ const ServiceListView: React.FC<ServiceListViewProps> = ({
   };
 
   return (
-    <div className="bg-white shadow-sm border-0 border-t border-gray-100 flex flex-col">
+    <div className="shadow-sm border-0 border-t border-gray-100 flex flex-col">
       <div className="p-1.5 border-b border-gray-100">
         <div className="flex items-center justify-between mb-2">
           <div className="flex items-center space-x-2">

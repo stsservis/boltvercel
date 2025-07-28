@@ -197,7 +197,7 @@ export default function Reports({ services, onViewService, onReorderServices }: 
   };
 
   return (
-    <div className="p-1.5 pb-3 space-y-1.5 bg-gray-50">
+    <div className="p-1.5 pb-3 space-y-1.5">
       {/* Header */}
       <div className="bg-white rounded-md shadow-sm p-1.5">
         <h1 className="text-xs font-bold text-gray-900 mb-1.5">Rapor Dönemi</h1>
