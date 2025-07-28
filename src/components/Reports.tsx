@@ -49,14 +49,16 @@ export default function Reports({ services, onViewService, onReorderServices }: 
           bValue = b.expenses;
           break;
         case 'profit':
-          aValue = (a.cost || a.feeCollected || 0) - a.expenses;
-          bValue = (b.cost || b.feeCollected || 0) - b.expenses;
+          aValue = (a.cost || a.feeCollected || 0) - a.expenses;      // Net Kâr
+          bValue = (b.cost || b.feeCollected || 0) - b.expenses;      // Net Kâr
           break;
         case 'remaining':
-          const aProfitShare = ((a.cost || a.feeCollected || 0) - a.expenses) * 0.3;
-          const bProfitShare = ((b.cost || b.feeCollected || 0) - b.expenses) * 0.3;
-          aValue = ((a.cost || a.feeCollected || 0) - a.expenses) - aProfitShare;
-          bValue = ((b.cost || b.feeCollected || 0) - b.expenses) - bProfitShare;
+          const aNetProfit = (a.cost || a.feeCollected || 0) - a.expenses;  // Net Kâr
+          const bNetProfit = (b.cost || b.feeCollected || 0) - b.expenses;  // Net Kâr
+          const aProfitShare = aNetProfit * 0.3;                            // Kâr Payı
+          const bProfitShare = bNetProfit * 0.3;                            // Kâr Payı
+          aValue = aNetProfit - aProfitShare;                               // Kalan
+          bValue = bNetProfit - bProfitShare;                               // Kalan
           break;
       }
       
@@ -82,16 +84,16 @@ export default function Reports({ services, onViewService, onReorderServices }: 
   // Calculate monthly financial data
   const monthlyRevenue = filteredServices.reduce((sum, service) => sum + (service.cost || service.feeCollected || 0), 0);
   const monthlyExpenses = filteredServices.reduce((sum, service) => sum + service.expenses, 0);
-  const monthlyNetProfit = monthlyRevenue - monthlyExpenses;
-  const monthlyProfitShare = monthlyNetProfit * 0.3;
-  const monthlyRemaining = monthlyNetProfit - monthlyProfitShare;
+  const monthlyNetProfit = monthlyRevenue - monthlyExpenses;  // Gelir - Gider = Net Kâr
+  const monthlyProfitShare = monthlyNetProfit * 0.3;          // Net Kâr × %30 = Kâr Payı
+  const monthlyRemaining = monthlyNetProfit - monthlyProfitShare; // Net Kâr - Kâr Payı = Kalan
 
   // Calculate yearly financial data
   const yearlyRevenue = yearlyServices.reduce((sum, service) => sum + (service.cost || service.feeCollected || 0), 0);
   const yearlyExpenses = yearlyServices.reduce((sum, service) => sum + service.expenses, 0);
-  const yearlyNetProfit = yearlyRevenue - yearlyExpenses;
-  const yearlyProfitShare = yearlyNetProfit * 0.3;
-  const yearlyRemaining = yearlyNetProfit - yearlyProfitShare;
+  const yearlyNetProfit = yearlyRevenue - yearlyExpenses;     // Gelir - Gider = Net Kâr
+  const yearlyProfitShare = yearlyNetProfit * 0.3;           // Net Kâr × %30 = Kâr Payı
+  const yearlyRemaining = yearlyNetProfit - yearlyProfitShare; // Net Kâr - Kâr Payı = Kalan
 
   const months = [
     { value: 1, label: 'Ocak' },
@@ -326,15 +328,15 @@ export default function Reports({ services, onViewService, onReorderServices }: 
       </div>
 
       {/* Service Details Table */}
-      <div className="bg-white rounded-md shadow-sm">
+      <div className="bg-white rounded-md shadow-sm overflow-hidden">
         <div className="p-1.5 border-b border-gray-100">
           <h2 className="text-xs font-semibold text-gray-900">
             Servis Detayları
           </h2>
         </div>
         
-        <div className="overflow-x-auto">
-          <table className="min-w-full divide-y divide-gray-200">
+        <div className="overflow-x-auto overflow-y-hidden scrollbar-thin scrollbar-thumb-gray-300 scrollbar-track-gray-100" style={{ WebkitOverflowScrolling: 'touch' }}>
+          <table className="min-w-[800px] divide-y divide-gray-200">
             <thead className="bg-gray-50">
               <tr>
                 <th className="px-1 py-1.5 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
@@ -375,28 +377,31 @@ export default function Reports({ services, onViewService, onReorderServices }: 
                   onClick={() => handleSort('profit')}
                 >
                   <div className="flex items-center space-x-1">
-                    <span>Kâr</span>
+                    <span>Net Kâr</span>
                     {getSortIcon('profit')}
                   </div>
+                </th>
+                <th className="px-1 py-1.5 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
+                  <span>Kâr Payı</span>
                 </th>
                 <th 
                   className="px-1 py-1.5 text-left text-xs font-medium text-gray-500 uppercase tracking-wider cursor-pointer hover:bg-gray-100 transition-colors"
                   onClick={() => handleSort('remaining')}
                 >
                   <div className="flex items-center space-x-1">
-                    <span>Payı</span>
+                    <span>Kalan</span>
                     {getSortIcon('remaining')}
                   </div>
                 </th>
               </tr>
             </thead>
             
-            <tbody className="bg-white divide-y divide-gray-200">
+            <tbody className="bg-white divide-y divide-gray-200" style={{ touchAction: 'pan-x' }}>
               {filteredServices.map((service, index) => {
                 const cost = service.cost || service.feeCollected || 0;
-                const profit = cost - service.expenses;
-                const profitShare = profit * 0.3;
-                const remaining = profit - profitShare;
+                const netProfit = cost - service.expenses;              // Gelir - Gider = Net Kâr
+                const profitShare = netProfit * 0.3;                   // Net Kâr × %30 = Kâr Payı
+                const remaining = netProfit - profitShare;             // Net Kâr - Kâr Payı = Kalan
                 const isDragging = draggedIndex === index;
                 
                 return (
@@ -413,29 +418,32 @@ export default function Reports({ services, onViewService, onReorderServices }: 
                     onClick={() => onViewService(service)}
                   >
                     <td className="px-1 py-1.5 whitespace-nowrap text-xs text-gray-900">
-                      <div className="flex items-center">
-                        <span className="break-words">{service.createdAt ? new Date(service.createdAt).toLocaleDateString('tr-TR').split('.').slice(0, 2).join('.') : formatDate(service.date || '').split('.').slice(0, 2).join('.')}</span>
+                      <div className="flex items-center select-text">
+                        <span className="break-words select-text user-select-text">{service.createdAt ? new Date(service.createdAt).toLocaleDateString('tr-TR').split('.').slice(0, 2).join('.') : formatDate(service.date || '').split('.').slice(0, 2).join('.')}</span>
                       </div>
                     </td>
                     <td className="px-1 py-1.5 text-xs text-gray-900 max-w-[100px]">
-                      <div className="truncate break-words" title={service.address || service.description}>
+                      <div className="truncate break-words select-text user-select-text" title={service.address || service.description}>
                         {service.address || service.description}
                       </div>
                     </td>
                     <td className="px-1 py-1.5 text-xs text-blue-600 font-medium max-w-[70px]">
-                      <div className="break-words">{service.customerPhone || service.phoneNumber}</div>
+                      <div className="break-words select-text user-select-text">{service.customerPhone || service.phoneNumber}</div>
                     </td>
                     <td className="px-1 py-1.5 text-xs text-green-600 font-medium">
-                      <div className="break-words">{(service.cost || service.feeCollected || 0).toLocaleString('tr-TR')}</div>
+                      <div className="break-words select-text user-select-text">{(service.cost || service.feeCollected || 0).toLocaleString('tr-TR')}</div>
                     </td>
                     <td className="px-1 py-1.5 text-xs text-red-600 font-medium">
-                      <div className="break-words">{service.expenses.toLocaleString('tr-TR')}</div>
+                      <div className="break-words select-text user-select-text">{service.expenses.toLocaleString('tr-TR')}</div>
                     </td>
                     <td className="px-1 py-1.5 text-xs text-blue-600 font-medium">
-                      <div className="break-words">{profit.toLocaleString('tr-TR')}</div>
+                      <div className="break-words select-text user-select-text">{netProfit.toLocaleString('tr-TR')}</div>
                     </td>
                     <td className="px-1 py-1.5 text-xs text-orange-600 font-medium">
-                      <div className="break-words">{remaining.toLocaleString('tr-TR')}</div>
+                      <div className="break-words select-text user-select-text">{profitShare.toLocaleString('tr-TR')}</div>
+                    </td>
+                    <td className="px-1 py-1.5 text-xs text-orange-600 font-medium">
+                      <div className="break-words select-text user-select-text">{remaining.toLocaleString('tr-TR')}</div>
                     </td>
                   </tr>
                 );
