@@ -4,7 +4,6 @@ import {
   ShareIcon,
   EditIcon,
   TrashIcon,
-  GripVerticalIcon,
   XIcon
 } from 'lucide-react';
 import { ServiceRecord } from '../types';
@@ -23,10 +22,14 @@ interface ServiceListViewProps {
 const getColorClasses = (color: string) => {
   const colorMap: { [key: string]: { bg: string; border: string } } = {
     white: { bg: 'bg-white', border: 'border-l-gray-400' },
+    red: { bg: 'bg-red-100', border: 'border-l-red-500' },
+    orange: { bg: 'bg-orange-100', border: 'border-l-orange-500' },
     yellow: { bg: 'bg-yellow-100', border: 'border-l-yellow-500' },
     green: { bg: 'bg-green-100', border: 'border-l-green-500' },
+    blue: { bg: 'bg-blue-100', border: 'border-l-blue-500' },
+    purple: { bg: 'bg-purple-100', border: 'border-l-purple-500' },
+    pink: { bg: 'bg-pink-100', border: 'border-l-pink-500' },
     gray: { bg: 'bg-gray-100', border: 'border-l-gray-500' },
-    red: { bg: 'bg-red-100', border: 'border-l-red-500' },
   };
   return colorMap[color] || colorMap.white;
 };
@@ -73,7 +76,20 @@ const ServiceListView: React.FC<ServiceListViewProps> = ({
   };
 
   const handleShareService = (service: ServiceRecord) => {
-    setShareModalService(service);
+    const address = service.address || service.description || '';
+    
+    // Check if native sharing is supported
+    if (navigator.share) {
+      navigator.share({
+        title: 'Servis Adresi',
+        text: address,
+      }).catch((error) => {
+        console.log('Paylaşım iptal edildi:', error);
+      });
+    } else {
+      // Fallback to custom modal for unsupported browsers
+      setShareModalService(service);
+    }
   };
 
   const handleShareToWhatsApp = (service: ServiceRecord) => {
@@ -164,30 +180,30 @@ const ServiceListView: React.FC<ServiceListViewProps> = ({
   };
 
   return (
-    <div className="bg-white shadow-sm border-0 border-t border-gray-200 h-full flex flex-col overflow-hidden">
-      <div className="p-2 border-b border-gray-200 flex-shrink-0">
-        <div className="flex items-center justify-between mb-3">
+    <div className="bg-white shadow-sm border-0 border-t border-gray-100 flex flex-col">
+      <div className="p-1.5 border-b border-gray-100">
+        <div className="flex items-center justify-between mb-2">
           <div className="flex items-center space-x-2">
-            <h2 className="text-sm font-semibold text-gray-900 truncate">{getStatusTitle()}</h2>
+            <h2 className="text-xs font-semibold text-gray-900 truncate">{getStatusTitle()}</h2>
             {statusFilter !== 'all' && (
               <button
                 onClick={onBackToAll}
-                className="text-xs text-blue-600 hover:text-blue-800 bg-blue-50 px-2 py-1 rounded whitespace-nowrap"
+                className="text-xs text-blue-600 hover:text-blue-800 bg-blue-50 px-1.5 py-0.5 rounded-sm whitespace-nowrap"
               >
                 ← Geri
               </button>
             )}
           </div>
-          <span className="text-xs text-gray-500 whitespace-nowrap">{servicesToShow.length}</span>
+          <span className="text-xs text-gray-400 whitespace-nowrap">{servicesToShow.length}</span>
         </div>
         
         {statusFilter !== 'all' && (
           <div className="relative">
-            <SearchIcon className="absolute left-3 top-1/2 transform -translate-y-1/2 h-4 w-4 text-gray-400" />
+            <SearchIcon className="absolute left-2.5 top-1/2 transform -translate-y-1/2 h-3.5 w-3.5 text-gray-400" />
             <input
               type="text"
               placeholder="Telefon veya adres ara..."
-              className="w-full pl-10 pr-3 py-2.5 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent text-sm min-h-[44px]"
+              className="w-full pl-8 pr-2.5 py-2 border border-gray-300 rounded-md focus:ring-1 focus:ring-blue-500 focus:border-transparent text-xs min-h-[36px]"
               value={searchTerm}
               onChange={(e) => setSearchTerm(e.target.value)}
             />
@@ -195,7 +211,7 @@ const ServiceListView: React.FC<ServiceListViewProps> = ({
         )}
       </div>
 
-      <div className="divide-y divide-gray-100 flex-1 overflow-y-auto overscroll-contain">
+      <div className="divide-y divide-gray-50">
         {servicesToShow.map((service, index) => {
           const colorClasses = getColorClasses(service.color || 'blue');
           const isDragging = draggedIndex === index;
@@ -208,70 +224,64 @@ const ServiceListView: React.FC<ServiceListViewProps> = ({
               onDragOver={handleDragOver}
               onDrop={(e) => handleDrop(e, index)}
               onDragEnd={handleDragEnd}
-              className={`p-3 hover:bg-gray-50 transition-all duration-200 border border-gray-200 hover:border-gray-300 rounded-lg shadow-sm hover:shadow-md border-l-4 ${colorClasses.border} ${colorClasses.bg} ${
+              className={`p-1.5 hover:bg-gray-25 transition-all duration-200 border border-gray-100 hover:border-gray-200 rounded-md shadow-sm hover:shadow-sm border-l-3 ${colorClasses.border} ${colorClasses.bg} ${
                 isDragging ? 'opacity-50 transform scale-[1.02] shadow-lg z-10' : ''
-              } ${servicesToShow.length > 1 ? 'cursor-grab active:cursor-grabbing' : 'cursor-pointer'} min-h-[80px] mb-2`}
+              } ${servicesToShow.length > 1 ? 'cursor-grab active:cursor-grabbing' : 'cursor-pointer'} min-h-[48px] mb-1`}
             >
               <div className="flex items-start justify-between">
-                <div className="flex items-start space-x-3 flex-1 min-w-0">
-                  {servicesToShow.length > 1 && (
-                    <div className="mt-1 opacity-50 hover:opacity-100 transition-opacity">
-                      <GripVerticalIcon className="h-4 w-4 text-gray-400" />
-                    </div>
-                  )}
-                  
+                <div className="flex items-start space-x-1.5 flex-1 min-w-0">
                   <div 
-                    className="flex-1 min-w-0 py-1"
+                    className="flex-1 min-w-0 py-0"
                     onClick={() => onViewService(service)}
                   >
-                    <div className="flex items-center space-x-2 mb-2">
+                    <div className="flex items-center space-x-1.5 mb-1">
                       <button
                         onClick={(e) => {
                           e.stopPropagation();
                           const phone = service.customerPhone || service.phoneNumber || '';
                           handlePhoneClick(phone);
                         }}
-                        className="text-blue-600 hover:text-blue-800 text-sm bg-white px-3 py-2 rounded-lg border border-blue-200 hover:border-blue-300 transition-all font-medium min-h-[36px] flex items-center shadow-sm hover:shadow-md"
+                        className="text-blue-600 hover:text-blue-800 text-xs bg-white px-1.5 py-1 rounded-sm border border-blue-200 hover:border-blue-300 transition-all font-medium min-h-[26px] flex items-center shadow-sm"
                       >
                         {service.customerPhone || service.phoneNumber}
                       </button>
                     </div>
                     
-                    <div className="min-h-[40px] flex items-start">
-                      <p className="text-sm text-gray-700 line-clamp-2 leading-relaxed break-words overflow-wrap-anywhere">
+                    <div className="min-h-[24px] flex items-start">
+                      <p className="text-xs text-gray-600 line-clamp-2 leading-snug break-words overflow-wrap-anywhere">
                       {service.address || service.description}
                       </p>
                     </div>
                   </div>
                 </div>
                 
-                <div className="flex items-center space-x-1 ml-2 mt-1">
+                <div className="flex items-center space-x-0.5 ml-1 mt-0">
                   <button
                     onClick={(e) => {
                       e.stopPropagation();
                       handleShareService(service);
                     }}
-                    className="p-2 text-gray-400 hover:text-green-600 transition-colors rounded-lg hover:bg-green-50 min-w-[40px] min-h-[40px] flex items-center justify-center"
+                    className="p-1 text-gray-400 hover:text-green-600 transition-colors rounded-sm hover:bg-green-50 min-w-[26px] min-h-[26px] flex items-center justify-center"
                   >
-                    <ShareIcon className="h-4 w-4" />
+                    <ShareIcon className="h-3 w-3" />
                   </button>
                   <button
                     onClick={(e) => {
                       e.stopPropagation();
                       onEditService(service);
                     }}
-                    className="p-2 text-gray-400 hover:text-blue-600 transition-colors rounded-lg hover:bg-blue-50 min-w-[40px] min-h-[40px] flex items-center justify-center"
+                    className="p-1 text-gray-400 hover:text-blue-600 transition-colors rounded-sm hover:bg-blue-50 min-w-[26px] min-h-[26px] flex items-center justify-center"
                   >
-                    <EditIcon className="h-4 w-4" />
+                    <EditIcon className="h-3 w-3" />
                   </button>
                   <button
                     onClick={(e) => {
                       e.stopPropagation();
                       onDeleteService(service.id);
                     }}
-                    className="p-2 text-gray-400 hover:text-red-600 transition-colors rounded-lg hover:bg-red-50 min-w-[40px] min-h-[40px] flex items-center justify-center"
+                    className="p-1 text-gray-400 hover:text-red-600 transition-colors rounded-sm hover:bg-red-50 min-w-[26px] min-h-[26px] flex items-center justify-center"
                   >
-                    <TrashIcon className="h-4 w-4" />
+                    <TrashIcon className="h-3 w-3" />
                   </button>
                 </div>
               </div>

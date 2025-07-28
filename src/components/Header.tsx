@@ -8,15 +8,15 @@ interface HeaderProps {
 
 const Header: React.FC<HeaderProps> = ({ onNavigate, currentPage }) => {
   return (
-    <header className="bg-white shadow-md border-b border-gray-200 flex-shrink-0">
-      <div className="px-4 py-3">
+    <header className="bg-white shadow-sm border-b border-gray-200 flex-shrink-0">
+      <div className="px-3 py-2">
         {/* Logo and Actions */}
         <div className="flex justify-between items-center">
           <div className="flex items-center space-x-2">
-            <div className="bg-gradient-to-r from-blue-600 to-blue-700 text-white px-3 py-2 rounded-lg text-sm font-bold min-w-[36px] text-center shadow-md">
+            <div className="bg-gradient-to-r from-blue-600 to-blue-700 text-white px-2 py-1.5 rounded-md text-xs font-bold min-w-[28px] text-center shadow-sm">
               STS
             </div>
-            <h1 className="text-lg font-bold text-gray-900 truncate">Servis Takip</h1>
+            <h1 className="text-base font-bold text-gray-900 truncate">Servis Takip</h1>
           </div>
 
           <div className="flex items-center">
@@ -26,9 +26,9 @@ const Header: React.FC<HeaderProps> = ({ onNavigate, currentPage }) => {
                 const event = new CustomEvent('addNewService');
                 window.dispatchEvent(event);
               }}
-              className="bg-gradient-to-r from-blue-600 to-blue-700 text-white px-4 py-2.5 rounded-lg hover:from-blue-700 hover:to-blue-800 transition-all duration-200 flex items-center space-x-2 text-sm font-medium min-h-[40px] whitespace-nowrap shadow-md hover:shadow-lg"
+              className="bg-gradient-to-r from-blue-600 to-blue-700 text-white px-3 py-2 rounded-md hover:from-blue-700 hover:to-blue-800 transition-all duration-200 flex items-center space-x-1.5 text-xs font-medium min-h-[32px] whitespace-nowrap shadow-sm hover:shadow-md"
             >
-              <PlusIcon className="h-4 w-4" />
+              <PlusIcon className="h-3.5 w-3.5" />
               <span>Yeni Servis</span>
             </button>
           </div>

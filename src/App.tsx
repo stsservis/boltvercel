@@ -401,7 +401,7 @@ function App() {
   };
 
   return (
-    <div className="h-screen bg-gray-50 flex flex-col overflow-hidden">
+    <div className="min-h-screen bg-gray-50">
       {/* Loading State */}
       {loading && (
         <div className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50">
@@ -436,7 +436,7 @@ function App() {
         currentPage={page}
       />
       
-      <div className="flex-1 flex flex-col overflow-hidden">
+      <div className="flex flex-col">
         {/* Always render Dashboard for status cards and navigation */}
         <Dashboard 
           services={services} 
@@ -448,10 +448,10 @@ function App() {
           onStatusCardClick={handleStatusCardClick}
         />
         
-        <main className="flex-1 overflow-hidden">
+        <main className="flex-1">
           {renderPage()}
         </main>
-        </div>
+      </div>
       
       {/* Service Detail Modal */}
       {viewingService && (

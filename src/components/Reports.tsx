@@ -1,7 +1,7 @@
 import React, { useState } from 'react';
 import { ServiceRecord } from '../types';
 import { formatCurrency, formatDate } from '../utils/helpers';
-import { ChevronUpIcon, ChevronDownIcon, GripVerticalIcon } from 'lucide-react';
+import { ChevronUpIcon, ChevronDownIcon } from 'lucide-react';
 import { saveServiceOrder } from '../utils/helpers';
 
 interface ReportsProps {
@@ -195,18 +195,18 @@ export default function Reports({ services, onViewService, onReorderServices }: 
   };
 
   return (
-    <div className="p-2 pb-4 space-y-2 bg-gray-50 h-full overflow-y-auto overscroll-contain">
+    <div className="p-1.5 pb-3 space-y-1.5 bg-gray-50">
       {/* Header */}
-      <div className="bg-white rounded-lg shadow-sm p-2">
-        <h1 className="text-sm font-bold text-gray-900 mb-2">Rapor Dönemi</h1>
+      <div className="bg-white rounded-md shadow-sm p-1.5">
+        <h1 className="text-xs font-bold text-gray-900 mb-1.5">Rapor Dönemi</h1>
         
-        <div className="grid grid-cols-2 gap-2">
+        <div className="grid grid-cols-2 gap-1.5">
           <div>
-            <label className="block text-xs font-medium text-gray-700 mb-1">Ay</label>
+            <label className="block text-xs font-medium text-gray-700 mb-0.5">Ay</label>
             <select
               value={selectedMonth}
               onChange={(e) => setSelectedMonth(Number(e.target.value))}
-              className="w-full px-2 py-2 border border-gray-300 rounded-md focus:ring-1 focus:ring-blue-500 focus:border-transparent text-xs min-h-[36px]"
+              className="w-full px-2 py-1.5 border border-gray-300 rounded-sm focus:ring-1 focus:ring-blue-500 focus:border-transparent text-xs min-h-[30px]"
             >
               {months.map(month => (
                 <option key={month.value} value={month.value}>
@@ -217,11 +217,11 @@ export default function Reports({ services, onViewService, onReorderServices }: 
           </div>
           
           <div>
-            <label className="block text-xs font-medium text-gray-700 mb-1">Yıl</label>
+            <label className="block text-xs font-medium text-gray-700 mb-0.5">Yıl</label>
             <select
               value={selectedYear}
               onChange={(e) => setSelectedYear(Number(e.target.value))}
-              className="w-full px-2 py-2 border border-gray-300 rounded-md focus:ring-1 focus:ring-blue-500 focus:border-transparent text-xs min-h-[36px]"
+              className="w-full px-2 py-1.5 border border-gray-300 rounded-sm focus:ring-1 focus:ring-blue-500 focus:border-transparent text-xs min-h-[30px]"
             >
               {years.map(year => (
                 <option key={year} value={year}>
@@ -234,8 +234,8 @@ export default function Reports({ services, onViewService, onReorderServices }: 
       </div>
 
       {/* Monthly Financial Summary */}
-      <div className="bg-white rounded-lg shadow-sm p-2">
-        <div className="flex items-center justify-between mb-2">
+      <div className="bg-white rounded-md shadow-sm p-1.5">
+        <div className="flex items-center justify-between mb-1.5">
           <h2 className="text-xs font-semibold text-gray-900">
             <span className="break-words">{months.find(m => m.value === selectedMonth)?.label} {selectedYear} - {filteredServices.length} servis</span>
           </h2>
@@ -247,28 +247,28 @@ export default function Reports({ services, onViewService, onReorderServices }: 
           </button>
         </div>
         
-        <div className="grid grid-cols-3 gap-1 text-xs mb-2">
-          <div className="text-center p-2 bg-green-50 rounded min-h-[50px] flex flex-col justify-center">
+        <div className="grid grid-cols-3 gap-1 text-xs mb-1.5">
+          <div className="text-center p-1.5 bg-green-50 rounded-sm min-h-[40px] flex flex-col justify-center">
             <div className="font-medium text-green-600 break-words text-xs">{formatCurrency(monthlyRevenue)}</div>
             <div className="text-gray-500 text-xs">Gelir</div>
           </div>
-          <div className="text-center p-2 bg-red-50 rounded min-h-[50px] flex flex-col justify-center">
+          <div className="text-center p-1.5 bg-red-50 rounded-sm min-h-[40px] flex flex-col justify-center">
             <div className="font-medium text-red-600 break-words text-xs">{formatCurrency(monthlyExpenses)}</div>
             <div className="text-gray-500 text-xs">Gider</div>
           </div>
-          <div className="text-center p-2 bg-blue-50 rounded min-h-[50px] flex flex-col justify-center">
+          <div className="text-center p-1.5 bg-blue-50 rounded-sm min-h-[40px] flex flex-col justify-center">
             <div className="font-medium text-blue-600 break-words text-xs">{formatCurrency(monthlyNetProfit)}</div>
             <div className="text-gray-500 text-xs">Kâr</div>
           </div>
         </div>
 
         {showMonthlyDetails && (
-          <div className="bg-gray-50 rounded p-2 space-y-1 text-xs">
+          <div className="bg-gray-50 rounded-sm p-1.5 space-y-0.5 text-xs">
             <div className="flex justify-between">
               <span className="text-gray-600">Kâr Payı (%30):</span>
               <span className="font-medium text-orange-600 break-words">{formatCurrency(monthlyProfitShare)}</span>
             </div>
-            <div className="flex justify-between border-t pt-2">
+            <div className="flex justify-between border-t pt-1">
               <span className="text-gray-600">Kalan Tutar:</span>
               <span className={`font-bold break-words ${monthlyRemaining >= 0 ? 'text-green-600' : 'text-red-600'}`}>
                 {formatCurrency(monthlyRemaining)}
@@ -279,7 +279,7 @@ export default function Reports({ services, onViewService, onReorderServices }: 
       </div>
 
       {/* Yearly Summary - Collapsible */}
-      <div className="bg-white rounded-lg shadow-sm p-2">
+      <div className="bg-white rounded-md shadow-sm p-1.5">
         <div className="flex items-center justify-between">
           <h3 className="text-xs font-semibold text-gray-900">
             <span className="break-words">{selectedYear} Yıllık Özet - {yearlyServices.length} servis</span>
@@ -293,28 +293,28 @@ export default function Reports({ services, onViewService, onReorderServices }: 
         </div>
         
         {showYearlyStats && (
-          <div className="mt-2">
-            <div className="grid grid-cols-3 gap-1 text-xs mb-2">
-              <div className="text-center p-2 bg-green-50 rounded min-h-[50px] flex flex-col justify-center">
+          <div className="mt-1.5">
+            <div className="grid grid-cols-3 gap-1 text-xs mb-1.5">
+              <div className="text-center p-1.5 bg-green-50 rounded-sm min-h-[40px] flex flex-col justify-center">
                 <div className="font-medium text-green-600 break-words text-xs">{formatCurrency(yearlyRevenue)}</div>
                 <div className="text-gray-500 text-xs">Gelir</div>
               </div>
-              <div className="text-center p-2 bg-red-50 rounded min-h-[50px] flex flex-col justify-center">
+              <div className="text-center p-1.5 bg-red-50 rounded-sm min-h-[40px] flex flex-col justify-center">
                 <div className="font-medium text-red-600 break-words text-xs">{formatCurrency(yearlyExpenses)}</div>
                 <div className="text-gray-500 text-xs">Gider</div>
               </div>
-              <div className="text-center p-2 bg-blue-50 rounded min-h-[50px] flex flex-col justify-center">
+              <div className="text-center p-1.5 bg-blue-50 rounded-sm min-h-[40px] flex flex-col justify-center">
                 <div className="font-medium text-blue-600 break-words text-xs">{formatCurrency(yearlyNetProfit)}</div>
                 <div className="text-gray-500 text-xs">Kâr</div>
               </div>
             </div>
             
-            <div className="bg-gray-50 rounded p-2 space-y-1 text-xs">
+            <div className="bg-gray-50 rounded-sm p-1.5 space-y-0.5 text-xs">
               <div className="flex justify-between">
                 <span className="text-gray-600">Kâr Payı (%30):</span>
                 <span className="font-medium text-orange-600 break-words">{formatCurrency(yearlyProfitShare)}</span>
               </div>
-              <div className="flex justify-between border-t pt-2">
+              <div className="flex justify-between border-t pt-1">
                 <span className="text-gray-600">Kalan Tutar:</span>
                 <span className={`font-bold break-words ${yearlyRemaining >= 0 ? 'text-green-600' : 'text-red-600'}`}>
                   {formatCurrency(yearlyRemaining)}
@@ -326,8 +326,8 @@ export default function Reports({ services, onViewService, onReorderServices }: 
       </div>
 
       {/* Service Details Table */}
-      <div className="bg-white rounded-lg shadow-sm">
-        <div className="p-2 border-b border-gray-200">
+      <div className="bg-white rounded-md shadow-sm">
+        <div className="p-1.5 border-b border-gray-100">
           <h2 className="text-xs font-semibold text-gray-900">
             Servis Detayları
           </h2>
@@ -337,14 +337,14 @@ export default function Reports({ services, onViewService, onReorderServices }: 
           <table className="min-w-full divide-y divide-gray-200">
             <thead className="bg-gray-50">
               <tr>
-                <th className="px-1.5 py-2 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
+                <th className="px-1 py-1.5 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
                   Tarih
                 </th>
-                <th className="px-1.5 py-2 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
+                <th className="px-1 py-1.5 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
                   Adres
                 </th>
                 <th 
-                  className="px-1.5 py-2 text-left text-xs font-medium text-gray-500 uppercase tracking-wider cursor-pointer hover:bg-gray-100 transition-colors"
+                  className="px-1 py-1.5 text-left text-xs font-medium text-gray-500 uppercase tracking-wider cursor-pointer hover:bg-gray-100 transition-colors"
                   onClick={() => handleSort('phone')}
                 >
                   <div className="flex items-center space-x-1">
@@ -353,7 +353,7 @@ export default function Reports({ services, onViewService, onReorderServices }: 
                   </div>
                 </th>
                 <th 
-                  className="px-1.5 py-2 text-left text-xs font-medium text-gray-500 uppercase tracking-wider cursor-pointer hover:bg-gray-100 transition-colors"
+                  className="px-1 py-1.5 text-left text-xs font-medium text-gray-500 uppercase tracking-wider cursor-pointer hover:bg-gray-100 transition-colors"
                   onClick={() => handleSort('revenue')}
                 >
                   <div className="flex items-center space-x-1">
@@ -362,7 +362,7 @@ export default function Reports({ services, onViewService, onReorderServices }: 
                   </div>
                 </th>
                 <th 
-                  className="px-1.5 py-2 text-left text-xs font-medium text-gray-500 uppercase tracking-wider cursor-pointer hover:bg-gray-100 transition-colors"
+                  className="px-1 py-1.5 text-left text-xs font-medium text-gray-500 uppercase tracking-wider cursor-pointer hover:bg-gray-100 transition-colors"
                   onClick={() => handleSort('expenses')}
                 >
                   <div className="flex items-center space-x-1">
@@ -371,7 +371,7 @@ export default function Reports({ services, onViewService, onReorderServices }: 
                   </div>
                 </th>
                 <th 
-                  className="px-1.5 py-2 text-left text-xs font-medium text-gray-500 uppercase tracking-wider cursor-pointer hover:bg-gray-100 transition-colors"
+                  className="px-1 py-1.5 text-left text-xs font-medium text-gray-500 uppercase tracking-wider cursor-pointer hover:bg-gray-100 transition-colors"
                   onClick={() => handleSort('profit')}
                 >
                   <div className="flex items-center space-x-1">
@@ -380,7 +380,7 @@ export default function Reports({ services, onViewService, onReorderServices }: 
                   </div>
                 </th>
                 <th 
-                  className="px-1.5 py-2 text-left text-xs font-medium text-gray-500 uppercase tracking-wider cursor-pointer hover:bg-gray-100 transition-colors"
+                  className="px-1 py-1.5 text-left text-xs font-medium text-gray-500 uppercase tracking-wider cursor-pointer hover:bg-gray-100 transition-colors"
                   onClick={() => handleSort('remaining')}
                 >
                   <div className="flex items-center space-x-1">
@@ -409,35 +409,32 @@ export default function Reports({ services, onViewService, onReorderServices }: 
                     onDragEnd={handleDragEnd}
                     className={`hover:bg-gray-50 cursor-pointer ${
                       isDragging ? 'opacity-50 bg-blue-50' : ''
-                    } min-h-[44px]`}
+                    } min-h-[36px]`}
                     onClick={() => onViewService(service)}
                   >
-                    <td className="px-1.5 py-2 whitespace-nowrap text-xs text-gray-900">
+                    <td className="px-1 py-1.5 whitespace-nowrap text-xs text-gray-900">
                       <div className="flex items-center">
-                        <div className="mr-1 cursor-grab opacity-50">
-                          <GripVerticalIcon className="h-3.5 w-3.5 text-gray-400" />
-                        </div>
                         <span className="break-words">{service.createdAt ? new Date(service.createdAt).toLocaleDateString('tr-TR').split('.').slice(0, 2).join('.') : formatDate(service.date || '').split('.').slice(0, 2).join('.')}</span>
                       </div>
                     </td>
-                    <td className="px-1.5 py-2 text-xs text-gray-900 max-w-[120px]">
+                    <td className="px-1 py-1.5 text-xs text-gray-900 max-w-[100px]">
                       <div className="truncate break-words" title={service.address || service.description}>
                         {service.address || service.description}
                       </div>
                     </td>
-                    <td className="px-1.5 py-2 text-xs text-blue-600 font-medium max-w-[80px]">
+                    <td className="px-1 py-1.5 text-xs text-blue-600 font-medium max-w-[70px]">
                       <div className="break-words">{service.customerPhone || service.phoneNumber}</div>
                     </td>
-                    <td className="px-1.5 py-2 text-xs text-green-600 font-medium">
+                    <td className="px-1 py-1.5 text-xs text-green-600 font-medium">
                       <div className="break-words">{(service.cost || service.feeCollected || 0).toLocaleString('tr-TR')}</div>
                     </td>
-                    <td className="px-1.5 py-2 text-xs text-red-600 font-medium">
+                    <td className="px-1 py-1.5 text-xs text-red-600 font-medium">
                       <div className="break-words">{service.expenses.toLocaleString('tr-TR')}</div>
                     </td>
-                    <td className="px-1.5 py-2 text-xs text-blue-600 font-medium">
+                    <td className="px-1 py-1.5 text-xs text-blue-600 font-medium">
                       <div className="break-words">{profit.toLocaleString('tr-TR')}</div>
                     </td>
-                    <td className="px-1.5 py-2 text-xs text-orange-600 font-medium">
+                    <td className="px-1 py-1.5 text-xs text-orange-600 font-medium">
                       <div className="break-words">{remaining.toLocaleString('tr-TR')}</div>
                     </td>
                   </tr>
@@ -447,7 +444,7 @@ export default function Reports({ services, onViewService, onReorderServices }: 
           </table>
           
           {filteredServices.length === 0 && (
-            <div className="text-center py-6 text-gray-500 text-sm px-4">
+            <div className="text-center py-4 text-gray-500 text-xs px-3">
               Seçilen dönemde servis bulunamadı
             </div>
           )}

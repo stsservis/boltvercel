@@ -44,14 +44,14 @@ const ServiceDetail: React.FC<ServiceDetailProps> = ({ service, onClose, onEdit 
   const getColorName = (color: string) => {
     const colorNames: { [key: string]: string } = {
       white: 'Beyaz',
+      red: 'Kırmızı',
+      orange: 'Turuncu',
       yellow: 'Sarı',
       green: 'Yeşil',
-      gray: 'Gri',
-      red: 'Kırmızı',
       blue: 'Mavi',
       purple: 'Mor',
       pink: 'Pembe',
-      indigo: 'İndigo'
+      gray: 'Gri',
     };
     return colorNames[color] || color;
   };
@@ -59,14 +59,14 @@ const ServiceDetail: React.FC<ServiceDetailProps> = ({ service, onClose, onEdit 
   const getColorClass = (color: string) => {
     const colorClasses: { [key: string]: string } = {
       white: 'bg-white border-gray-300',
+      red: 'bg-red-100 border-red-300',
+      orange: 'bg-orange-100 border-orange-300',
       yellow: 'bg-yellow-100 border-yellow-300',
       green: 'bg-green-100 border-green-300',
-      gray: 'bg-gray-100 border-gray-300',
-      red: 'bg-red-100 border-red-300',
       blue: 'bg-blue-100 border-blue-300',
       purple: 'bg-purple-100 border-purple-300',
       pink: 'bg-pink-100 border-pink-300',
-      indigo: 'bg-indigo-100 border-indigo-300'
+      gray: 'bg-gray-100 border-gray-300',
     };
     return colorClasses[color] || colorClasses.white;
   };
