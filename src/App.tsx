@@ -54,10 +54,18 @@ function App() {
       setPage(event.detail);
     };
     
+    // Listen for add new service events
+    const handleAddNewService = () => {
+      setSelectedService(undefined);
+      setPage('newService');
+    };
+    
     window.addEventListener('navigate', handleNavigate as EventListener);
+    window.addEventListener('addNewService', handleAddNewService as EventListener);
     
     return () => {
       window.removeEventListener('navigate', handleNavigate as EventListener);
+      window.removeEventListener('addNewService', handleAddNewService as EventListener);
     };
   }, []);
 
@@ -148,6 +156,8 @@ function App() {
     setServices(reorderedServices);
     saveServiceOrder(reorderedServices);
     localStorage.setItem('sts_services', JSON.stringify(reorderedServices));
+    // Clear selected service to prevent form contamination
+    setSelectedService(undefined);
   };
 
   const handleAddMissingPart = (missingPart: string) => {
