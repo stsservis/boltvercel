@@ -34,6 +34,21 @@ const getColorClasses = (color: string) => {
   return colorMap[color] || colorMap.white;
 };
 
+const getTextColorClasses = (color: string) => {
+  const textColorMap: { [key: string]: { phone: string; address: string; button: string } } = {
+    white: { phone: 'text-blue-700', address: 'text-gray-800', button: 'border-blue-300 hover:border-blue-400' },
+    red: { phone: 'text-red-700', address: 'text-red-800', button: 'border-red-300 hover:border-red-400' },
+    orange: { phone: 'text-orange-700', address: 'text-orange-800', button: 'border-orange-300 hover:border-orange-400' },
+    yellow: { phone: 'text-yellow-700', address: 'text-yellow-800', button: 'border-yellow-300 hover:border-yellow-400' },
+    green: { phone: 'text-green-700', address: 'text-green-800', button: 'border-green-300 hover:border-green-400' },
+    blue: { phone: 'text-blue-700', address: 'text-blue-800', button: 'border-blue-300 hover:border-blue-400' },
+    purple: { phone: 'text-purple-700', address: 'text-purple-800', button: 'border-purple-300 hover:border-purple-400' },
+    pink: { phone: 'text-pink-700', address: 'text-pink-800', button: 'border-pink-300 hover:border-pink-400' },
+    gray: { phone: 'text-gray-700', address: 'text-gray-800', button: 'border-gray-300 hover:border-gray-400' },
+  };
+  return textColorMap[color] || textColorMap.white;
+};
+
 const ServiceListView: React.FC<ServiceListViewProps> = ({ 
   services,
   statusFilter,
@@ -214,6 +229,7 @@ const ServiceListView: React.FC<ServiceListViewProps> = ({
       <div className="divide-y divide-gray-50">
         {servicesToShow.map((service, index) => {
           const colorClasses = getColorClasses(service.color || 'blue');
+          const textColorClasses = getTextColorClasses(service.color || 'blue');
           const isDragging = draggedIndex === index;
           
           return (
@@ -241,14 +257,14 @@ const ServiceListView: React.FC<ServiceListViewProps> = ({
                           const phone = service.customerPhone || service.phoneNumber || '';
                           handlePhoneClick(phone);
                         }}
-                        className="text-blue-600 hover:text-blue-800 text-xs bg-white px-1.5 py-1 rounded-sm border border-blue-200 hover:border-blue-300 transition-all font-medium min-h-[26px] flex items-center shadow-sm"
+                        className={`${textColorClasses.phone} hover:opacity-80 text-sm bg-white px-2 py-1.5 rounded-sm border ${textColorClasses.button} transition-all min-h-[28px] flex items-center shadow-sm`}
                       >
                         {service.customerPhone || service.phoneNumber}
                       </button>
                     </div>
                     
                     <div className="min-h-[24px] flex items-start">
-                      <p className="text-xs text-gray-600 line-clamp-2 leading-snug break-words overflow-wrap-anywhere">
+                      <p className={`text-sm ${textColorClasses.address} line-clamp-2 leading-relaxed break-words overflow-wrap-anywhere`}>
                       {service.address || service.description}
                       </p>
                     </div>

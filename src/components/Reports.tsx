@@ -17,7 +17,7 @@ export default function Reports({ services, onViewService, onReorderServices }: 
   const [showMonthlyDetails, setShowMonthlyDetails] = useState(false);
   const [draggedIndex, setDraggedIndex] = useState<number | null>(null);
   const [sortConfig, setSortConfig] = useState<{
-    key: 'phone' | 'revenue' | 'expenses' | 'profit' | 'remaining' | null;
+    key: 'date' | 'address' | 'phone' | 'revenue' | 'expenses' | 'profit' | 'remaining' | null;
     direction: 'asc' | 'desc';
   }>({ key: null, direction: 'asc' });
 
@@ -36,6 +36,16 @@ export default function Reports({ services, onViewService, onReorderServices }: 
       let bValue: number | string = 0;
       
       switch (sortConfig.key) {
+        case 'date':
+          const aDate = a.createdAt ? new Date(a.createdAt) : new Date(a.date || '');
+          const bDate = b.createdAt ? new Date(b.createdAt) : new Date(b.date || '');
+          aValue = aDate.getTime();
+          bValue = bDate.getTime();
+          break;
+        case 'address':
+          aValue = a.address || a.description || '';
+          bValue = b.address || b.description || '';
+          break;
         case 'phone':
           aValue = a.customerPhone || a.phoneNumber || '';
           bValue = b.customerPhone || b.phoneNumber || '';
@@ -112,7 +122,7 @@ export default function Reports({ services, onViewService, onReorderServices }: 
 
   const years = [2023, 2024, 2025, 2026];
 
-  const handleSort = (key: 'phone' | 'revenue' | 'expenses' | 'profit' | 'remaining') => {
+  const handleSort = (key: 'date' | 'address' | 'phone' | 'revenue' | 'expenses' | 'profit' | 'remaining') => {
     setSortConfig(prevConfig => ({
       key,
       direction: prevConfig.key === key && prevConfig.direction === 'asc' ? 'desc' : 'asc'
@@ -339,11 +349,23 @@ export default function Reports({ services, onViewService, onReorderServices }: 
           <table className="min-w-[800px] divide-y divide-gray-200">
             <thead className="bg-gray-50">
               <tr>
-                <th className="px-1 py-1.5 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
-                  Tarih
+                <th 
+                  className="px-1 py-1.5 text-left text-xs font-medium text-gray-500 uppercase tracking-wider cursor-pointer hover:bg-gray-100 transition-colors"
+                  onClick={() => handleSort('date')}
+                >
+                  <div className="flex items-center space-x-1">
+                    <span>Tarih</span>
+                    {getSortIcon('date')}
+                  </div>
                 </th>
-                <th className="px-1 py-1.5 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
-                  Adres
+                <th 
+                  className="px-1 py-1.5 text-left text-xs font-medium text-gray-500 uppercase tracking-wider cursor-pointer hover:bg-gray-100 transition-colors"
+                  onClick={() => handleSort('address')}
+                >
+                  <div className="flex items-center space-x-1">
+                    <span>Adres</span>
+                    {getSortIcon('address')}
+                  </div>
                 </th>
                 <th 
                   className="px-1 py-1.5 text-left text-xs font-medium text-gray-500 uppercase tracking-wider cursor-pointer hover:bg-gray-100 transition-colors"
