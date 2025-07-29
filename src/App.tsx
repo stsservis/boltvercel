@@ -403,7 +403,7 @@ function App() {
 
   return (
     <AuthWrapper>
-    <div className="min-h-screen whatsapp-bg">
+    <div className="min-h-screen app-bg">
       {/* Loading State */}
       {loading && (
         <div className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50">

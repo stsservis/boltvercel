@@ -1,5 +1,4 @@
 import { ServiceRecord, DashboardStats } from '../types';
-import { v4 as uuidv4 } from 'uuid';
 
 // Format currency
 export const formatCurrency = (amount: number): string => {
@@ -71,7 +70,7 @@ export const calculateDashboardStats = (
 
 // Generate a proper UUID
 export const generateId = (): string => {
-  return uuidv4();
+  return 'id_' + Date.now() + '_' + Math.random().toString(36).substr(2, 9);
 };
 
 // Export data as JSON file

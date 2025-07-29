@@ -6,18 +6,15 @@
   "scripts": {
     "dev": "vite",
     "build": "vite build",
-    "build:netlify": "npm install && vite build",
     "lint": "eslint .",
     "preview": "vite preview"
   },
   "dependencies": {
-    "@types/uuid": "^10.0.0",
-    "firebase": "^12.0.0",
     "lucide-react": "^0.344.0",
     "react": "^18.3.1",
     "react-dom": "^18.3.1",
-    "sql.js": "^1.13.0",
-    "uuid": "^11.1.0"
+    "uuid": "^11.1.0",
+    "@types/uuid": "^10.0.0"
   },
   "devDependencies": {
     "@eslint/js": "^9.9.1",

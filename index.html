@@ -1,96 +1,13 @@
 <!doctype html>
-<html lang="en">
+<html lang="tr">
   <head>
     <meta charset="UTF-8" />
-    <link rel="icon" type="image/png" href="/icon-192.png" />
-    <link rel="shortcut icon" type="image/png" href="/icon-192.png" />
-    <link rel="apple-touch-icon" href="/icon-192.png" />
-    <link rel="apple-touch-icon" sizes="192x192" href="/icon-192.png" />
-    <link rel="apple-touch-icon" sizes="512x512" href="/icon-512.png" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <meta name="theme-color" content="#2563eb" />
-    <meta name="description" content="Servis takip ve yönetim sistemi - Tamir çarkı logosu ile PWA" />
-    <meta name="apple-mobile-web-app-capable" content="yes" />
-    <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent" />
-    <meta name="apple-mobile-web-app-title" content="STS Servis" />
-    <meta name="mobile-web-app-capable" content="yes" />
-    <meta name="msapplication-TileImage" content="/icon-192.png" />
-    <meta name="msapplication-TileColor" content="#2563eb" />
-    <link rel="manifest" href="/manifest.json" />
+    <meta name="description" content="Servis takip ve yönetim sistemi" />
     <title>STS Servis Takip</title>
   </head>
   <body>
     <div id="root"></div>
     <script type="module" src="/src/main.tsx"></script>
-    <script>
-      // More robust StackBlitz environment detection
-      const isStackBlitz = window.location.href.includes('stackblitz.io') || 
-                          window.location.href.includes('webcontainer.io') || 
-                          window.location.hostname.includes('stackblitz');
-      
-      // Register service worker for PWA functionality
-      if ('serviceWorker' in navigator && !isStackBlitz) {
-        window.addEventListener('load', () => {
-          navigator.serviceWorker.register('/sw.js', { scope: '/' })
-            .then((registration) => {
-              console.log('Service Worker v3 registered successfully:', registration.scope);
-              
-              // Check for updates
-              registration.addEventListener('updatefound', () => {
-                const newWorker = registration.installing;
-                if (newWorker) {
-                  newWorker.addEventListener('statechange', () => {
-                    if (newWorker.state === 'installed' && navigator.serviceWorker.controller) {
-                      // New content is available, refresh the page
-                      console.log('New service worker installed, updating...');
-                      if (confirm('Uygulama güncellendi! Yeni sürümü görmek için sayfayı yenilemek ister misiniz?')) {
-                        window.location.reload();
-                      }
-                    }
-                  });
-                }
-              });
-            })
-            .catch((registrationError) => {
-              console.error('Service Worker registration failed:', registrationError);
-            });
-        });
-      } else if (isStackBlitz) {
-        console.log('Service Worker skipped: Not supported in StackBlitz environment');
-      }
-      
-      // PWA install prompt
-      let deferredPrompt;
-      if (!isStackBlitz) {
-        window.addEventListener('beforeinstallprompt', (e) => {
-          console.log('PWA install prompt available - ready for installation');
-          e.preventDefault();
-          deferredPrompt = e;
-          
-          // Show a custom install prompt after a short delay
-          setTimeout(() => {
-            if (deferredPrompt && confirm('Bu uygulamayı ana ekranınıza eklemek ister misiniz? Daha hızlı erişim sağlar ve offline çalışır.')) {
-              deferredPrompt.prompt();
-              deferredPrompt.userChoice.then((choiceResult) => {
-                if (choiceResult.outcome === 'accepted') {
-                  console.log('User accepted the PWA install prompt');
-                } else {
-                  console.log('User dismissed the PWA install prompt');
-                }
-                deferredPrompt = null;
-              });
-            }
-          }, 3000);
-        });
-      }
-      
-      // Track PWA installation
-      if (!isStackBlitz) {
-        window.addEventListener('appinstalled', (evt) => {
-          console.log('PWA was installed successfully - tamir çarkı ikonu ile');
-          alert('Uygulama başarıyla ana ekranınıza eklendi! 🔧⚙️');
-        });
-      }
-    </script>
   </body>
 </html>
