@@ -21,15 +21,15 @@ interface ServiceListViewProps {
 
 const getColorClasses = (color: string) => {
   const colorMap: { [key: string]: { bg: string; border: string } } = {
-    white: { bg: 'bg-white', border: 'border-l-gray-400' },
-    red: { bg: 'bg-red-100', border: 'border-l-red-500' },
-    orange: { bg: 'bg-orange-100', border: 'border-l-orange-500' },
-    yellow: { bg: 'bg-yellow-100', border: 'border-l-yellow-500' },
-    green: { bg: 'bg-green-100', border: 'border-l-green-500' },
-    blue: { bg: 'bg-blue-100', border: 'border-l-blue-500' },
-    purple: { bg: 'bg-purple-100', border: 'border-l-purple-500' },
-    pink: { bg: 'bg-pink-100', border: 'border-l-pink-500' },
-    gray: { bg: 'bg-gray-100', border: 'border-l-gray-500' },
+    white: { bg: 'bg-white', border: 'border-gray-400' },
+    red: { bg: 'bg-red-100', border: 'border-red-400' },
+    orange: { bg: 'bg-orange-100', border: 'border-orange-400' },
+    yellow: { bg: 'bg-yellow-100', border: 'border-yellow-400' },
+    green: { bg: 'bg-green-100', border: 'border-green-400' },
+    blue: { bg: 'bg-blue-100', border: 'border-blue-400' },
+    purple: { bg: 'bg-purple-100', border: 'border-purple-400' },
+    pink: { bg: 'bg-pink-100', border: 'border-pink-400' },
+    gray: { bg: 'bg-gray-100', border: 'border-gray-400' },
   };
   return colorMap[color] || colorMap.white;
 };
@@ -240,9 +240,9 @@ const ServiceListView: React.FC<ServiceListViewProps> = ({
               onDragOver={handleDragOver}
               onDrop={(e) => handleDrop(e, index)}
               onDragEnd={handleDragEnd}
-              className={`p-1.5 hover:bg-gray-25 transition-all duration-200 border border-gray-100 hover:border-gray-200 rounded-md shadow-sm hover:shadow-sm border-l-3 ${colorClasses.border} ${colorClasses.bg} ${
+              className={`p-1.5 transition-all duration-200 border ${colorClasses.border} ${colorClasses.bg} ${
                 isDragging ? 'opacity-50 transform scale-[1.02] shadow-lg z-10' : ''
-              } ${servicesToShow.length > 1 ? 'cursor-grab active:cursor-grabbing' : 'cursor-pointer'} min-h-[48px] mb-1`}
+              } ${servicesToShow.length > 1 ? 'cursor-grab active:cursor-grabbing' : 'cursor-pointer'} min-h-[48px]`}
             >
               <div className="flex items-start justify-between">
                 <div className="flex items-start space-x-1.5 flex-1 min-w-0">
@@ -257,14 +257,14 @@ const ServiceListView: React.FC<ServiceListViewProps> = ({
                           const phone = service.customerPhone || service.phoneNumber || '';
                           handlePhoneClick(phone);
                         }}
-                        className={`${textColorClasses.phone} hover:opacity-80 text-sm bg-white px-2 py-1.5 rounded-sm border ${textColorClasses.button} transition-all min-h-[28px] flex items-center shadow-sm`}
+                        className={`${textColorClasses.phone} hover:opacity-80 text-xs bg-white px-2 py-1.5 rounded-sm border ${textColorClasses.button} transition-all min-h-[28px] flex items-center shadow-sm`}
                       >
                         {service.customerPhone || service.phoneNumber}
                       </button>
                     </div>
                     
                     <div className="min-h-[24px] flex items-start">
-                      <p className={`text-sm ${textColorClasses.address} line-clamp-2 leading-relaxed break-words overflow-wrap-anywhere`}>
+                      <p className={`text-xs ${textColorClasses.address} line-clamp-2 leading-snug break-words overflow-wrap-anywhere`}>
                       {service.address || service.description}
                       </p>
                     </div>
