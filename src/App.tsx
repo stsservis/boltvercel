@@ -27,10 +27,8 @@ function App() {
   const [selectedService, setSelectedService] = useState<ServiceRecord | undefined>(undefined);
   const [missingParts, setMissingParts] = useState<string[]>([]);
   const [viewingService, setViewingService] = useState<ServiceRecord | null>(null);
-  
   const [statusFilter, setStatusFilter] = useState<'all' | 'ongoing' | 'workshop' | 'completed'>('all');
 
-  // Load data from localStorage on component mount
   React.useEffect(() => {
     loadData();
   }, []);
@@ -50,12 +48,10 @@ function App() {
   };
 
   React.useEffect(() => {
-    // Listen for navigation events from Dashboard
     const handleNavigate = (event: CustomEvent) => {
       setPage(event.detail);
     };
     
-    // Listen for add new service events
     const handleAddNewService = () => {
       setSelectedService(undefined);
       setPage('newService');
@@ -73,32 +69,24 @@ function App() {
   const loadServices = () => {
     try {
       setError(null);
-      console.log('🔄 Loading services from localStorage...');
-      
       const savedServices = localStorage.getItem('sts_services');
       const servicesData = savedServices ? JSON.parse(savedServices) : [];
       
-      // Migrate legacy data to new structure
       const migratedServices = servicesData.map((service: any) => ({
         ...service,
-        // Migrate legacy fields to new structure
         customerPhone: service.customerPhone || service.phoneNumber || '',
         address: service.address || service.description || '',
         cost: service.cost || service.feeCollected || 0,
         createdAt: service.createdAt || service.date || new Date().toISOString(),
         updatedAt: service.updatedAt || new Date().toISOString(),
-        // Keep legacy fields for backward compatibility
         phoneNumber: service.phoneNumber || service.customerPhone || '',
         description: service.description || service.address || '',
         feeCollected: service.feeCollected || service.cost || 0,
         date: service.date || service.createdAt || new Date().toISOString().split('T')[0],
       }));
       
-      // Apply saved order from localStorage
       const orderedServices = applySavedOrder(migratedServices);
       setServices(orderedServices);
-      
-      console.log('✅ Successfully loaded', orderedServices.length, 'services from localStorage');
     } catch (error) {
       console.error('❌ Failed to load services:', error);
       setError('Servisler yüklenirken hata oluştu.');
@@ -110,7 +98,6 @@ function App() {
       const savedNotes = localStorage.getItem('sts_notes');
       const notesData = savedNotes ? JSON.parse(savedNotes) : [];
       setNotes(notesData);
-      console.log('✅ Successfully loaded', notesData.length, 'notes from localStorage');
     } catch (error) {
       console.error('❌ Failed to load notes from localStorage:', error);
     }
@@ -121,16 +108,9 @@ function App() {
       const savedParts = localStorage.getItem('sts_missing_parts');
       const partsData = savedParts ? JSON.parse(savedParts) : [];
       setMissingParts(partsData);
-      console.log('✅ Successfully loaded', partsData.length, 'missing parts from localStorage');
     } catch (error) {
       console.error('❌ Failed to load missing parts from localStorage:', error);
     }
-  };
-
-  const handleAddService = () => {
-    setSelectedService(undefined);
-    setSelectedService(undefined);
-    setPage('newService');
   };
 
   const handleEditService = (service: ServiceRecord) => {
@@ -153,11 +133,9 @@ function App() {
   };
 
   const handleReorderServices = (reorderedServices: ServiceRecord[]) => {
-    // Update services state and save to localStorage
     setServices(reorderedServices);
     saveServiceOrder(reorderedServices);
     localStorage.setItem('sts_services', JSON.stringify(reorderedServices));
-    // Clear selected service to prevent form contamination
     setSelectedService(undefined);
   };
 
@@ -198,8 +176,6 @@ function App() {
   const createService = (service: ServiceRecord) => {
     try {
       setError(null);
-      console.log('🔄 Creating new service in localStorage:', service);
-      
       const newService = { 
         ...service, 
         id: service.id || generateId(),
@@ -210,8 +186,6 @@ function App() {
       setServices(updatedServices);
       localStorage.setItem('sts_services', JSON.stringify(updatedServices));
       setPage('dashboard');
-      
-      console.log('✅ Successfully created service in localStorage:', newService);
     } catch (error) {
       console.error('❌ Failed to create service:', error);
       setError('Servis kaydı oluşturulurken hata oluştu. Lütfen tekrar deneyin.');
@@ -221,8 +195,6 @@ function App() {
   const updateService = (service: ServiceRecord) => {
     try {
       setError(null);
-      console.log('🔄 Updating service in localStorage:', service);
-      
       const updatedServices = services.map(s => 
         s.id === service.id 
           ? { ...service, updatedAt: new Date().toISOString() }
@@ -231,8 +203,6 @@ function App() {
       setServices(updatedServices);
       localStorage.setItem('sts_services', JSON.stringify(updatedServices));
       setPage('dashboard');
-      
-      console.log('✅ Successfully updated service in localStorage:', service);
     } catch (error) {
       console.error('❌ Failed to update service:', error);
       setError('Servis kaydı güncellenirken hata oluştu. Lütfen tekrar deneyin.');
@@ -242,20 +212,15 @@ function App() {
   const deleteService = (id: string) => {
     try {
       setError(null);
-      console.log('🔄 Deleting service from localStorage:', id);
-      
       const updatedServices = services.filter(s => s.id !== id);
       setServices(updatedServices);
       localStorage.setItem('sts_services', JSON.stringify(updatedServices));
-      
-      console.log('✅ Successfully deleted service from localStorage:', id);
     } catch (error) {
       console.error('❌ Failed to delete service:', error);
       setError('Servis kaydı silinirken hata oluştu. Lütfen tekrar deneyin.');
     }
   };
 
-  // Notes handlers
   const handleAddNote = (note: Note) => {
     const updatedNotes = [...notes, note];
     setNotes(updatedNotes);
@@ -278,7 +243,6 @@ function App() {
 
   const handleExportData = () => {
     try {
-      // Transform services to ensure they use the new structure
       const transformedServices = services.map(service => ({
         id: service.id,
         customerPhone: service.customerPhone || service.phoneNumber || '',
@@ -319,11 +283,8 @@ function App() {
       reader.onload = (event) => {
         try {
           const data = JSON.parse(event.target?.result as string);
-          
-          // Check if this is a lovable.json format (nested data structure)
           const actualData = data.data ? data.data : data;
           
-          // Import data to localStorage
           if (actualData.services) {
             localStorage.setItem('sts_services', JSON.stringify(actualData.services));
           }
@@ -334,7 +295,6 @@ function App() {
             localStorage.setItem('sts_missing_parts', JSON.stringify(actualData.missingParts));
           }
           
-          // Reload all data from localStorage to ensure proper state update
           loadData();
           
           const serviceCount = actualData.services ? actualData.services.length : 0;
@@ -396,74 +356,78 @@ function App() {
         );
       default:
         return (
-          <ServiceListView services={services} statusFilter={statusFilter} onEditService={handleEditService} onDeleteService={handleDeleteService} onViewService={handleViewService} onReorderServices={handleReorderServices} onBackToAll={handleBackToAll} />
+          <ServiceListView 
+            services={services} 
+            statusFilter={statusFilter} 
+            onEditService={handleEditService} 
+            onDeleteService={handleDeleteService} 
+            onViewService={handleViewService} 
+            onReorderServices={handleReorderServices} 
+            onBackToAll={handleBackToAll} 
+          />
         );
     }
   };
 
   return (
     <AuthWrapper>
-    <div className="min-h-screen app-bg">
-      {/* Loading State */}
-      {loading && (
-        <div className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50">
-          <div className="bg-white rounded-lg p-6 flex items-center space-x-3">
-            <div className="animate-spin rounded-full h-6 w-6 border-b-2 border-blue-600"></div>
-            <span className="text-gray-700">Veriler yükleniyor...</span>
-          </div>
-        </div>
-      )}
-
-      {/* Error State */}
-      {error && (
-        <div className="bg-red-50 border border-red-200 rounded-lg p-4 m-4">
-          <div className="flex items-center">
-            <div className="text-red-600 mr-3">⚠️</div>
-            <div>
-              <h3 className="text-red-800 font-medium">Hata</h3>
-              <p className="text-red-700 text-sm">{error}</p>
-              <button 
-                onClick={loadServices}
-                className="mt-2 text-red-600 hover:text-red-800 text-sm underline"
-              >
-                Yeniden yükle
-              </button>
+      <div className="min-h-screen app-bg">
+        {loading && (
+          <div className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50">
+            <div className="bg-white rounded-lg p-6 flex items-center space-x-3">
+              <div className="animate-spin rounded-full h-6 w-6 border-b-2 border-blue-600"></div>
+              <span className="text-gray-700">Veriler yükleniyor...</span>
             </div>
           </div>
-        </div>
-      )}
+        )}
 
-      <Header 
-        onNavigate={setPage} 
-        currentPage={page}
-      />
-      
-      <div className="flex flex-col">
-        {/* Always render Dashboard for status cards and navigation */}
-        <Dashboard 
-          services={services} 
-          missingParts={missingParts}
-          onAddMissingPart={handleAddMissingPart}
-          onRemoveMissingPart={handleRemoveMissingPart}
+        {error && (
+          <div className="bg-red-50 border border-red-200 rounded-lg p-4 m-4">
+            <div className="flex items-center">
+              <div className="text-red-600 mr-3">⚠️</div>
+              <div>
+                <h3 className="text-red-800 font-medium">Hata</h3>
+                <p className="text-red-700 text-sm">{error}</p>
+                <button 
+                  onClick={loadData}
+                  className="mt-2 text-red-600 hover:text-red-800 text-sm underline"
+                >
+                  Yeniden yükle
+                </button>
+              </div>
+            </div>
+          </div>
+        )}
+
+        <Header 
+          onNavigate={setPage} 
           currentPage={page}
-          statusFilter={statusFilter}
-          onStatusCardClick={handleStatusCardClick}
         />
         
-        <main className="flex-1">
-          {renderPage()}
-        </main>
+        <div className="flex flex-col">
+          <Dashboard 
+            services={services} 
+            missingParts={missingParts}
+            onAddMissingPart={handleAddMissingPart}
+            onRemoveMissingPart={handleRemoveMissingPart}
+            currentPage={page}
+            statusFilter={statusFilter}
+            onStatusCardClick={handleStatusCardClick}
+          />
+          
+          <main className="flex-1">
+            {renderPage()}
+          </main>
+        </div>
+        
+        {viewingService && (
+          <ServiceDetail
+            service={viewingService}
+            onClose={handleCloseServiceDetail}
+            onEdit={handleEditFromDetail}
+          />
+        )}
       </div>
-      
-      {/* Service Detail Modal */}
-      {viewingService && (
-        <ServiceDetail
-          service={viewingService}
-          onClose={handleCloseServiceDetail}
-          onEdit={handleEditFromDetail}
-        />
-      )}
-    </div>
     </AuthWrapper>
   );
 }

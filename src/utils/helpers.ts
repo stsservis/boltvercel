@@ -1,6 +1,5 @@
 import { ServiceRecord, DashboardStats } from '../types';
 
-// Format currency
 export const formatCurrency = (amount: number): string => {
   return new Intl.NumberFormat('tr-TR', {
     style: 'currency',
@@ -8,17 +7,14 @@ export const formatCurrency = (amount: number): string => {
   }).format(amount);
 };
 
-// Format date
 export const formatDate = (dateString: string): string => {
   return new Date(dateString).toLocaleDateString('tr-TR');
 };
 
-// Calculate profit
 export const calculateProfit = (fee: number, expense: number): number => {
   return fee - expense;
 };
 
-// Calculate dashboard stats
 export const calculateDashboardStats = (
   services: ServiceRecord[]
 ): DashboardStats => {
@@ -68,43 +64,10 @@ export const calculateDashboardStats = (
   };
 };
 
-// Generate a proper UUID
 export const generateId = (): string => {
   return 'id_' + Date.now() + '_' + Math.random().toString(36).substr(2, 9);
 };
 
-// Export data as JSON file
-export const exportData = (services: ServiceRecord[]) => {
-  const data = JSON.stringify(services, null, 2);
-  const blob = new Blob([data], { type: 'application/json' });
-  const url = URL.createObjectURL(blob);
-  const link = document.createElement('a');
-  link.href = url;
-  link.download = `servis-kayitlari-${new Date().toISOString().split('T')[0]}.json`;
-  document.body.appendChild(link);
-  link.click();
-  document.body.removeChild(link);
-  URL.revokeObjectURL(url);
-};
-
-// Import data from JSON file
-export const importData = (file: File): Promise<ServiceRecord[]> => {
-  return new Promise((resolve, reject) => {
-    const reader = new FileReader();
-    reader.onload = (e) => {
-      try {
-        const services = JSON.parse(e.target?.result as string);
-        resolve(services);
-      } catch (error) {
-        reject(new Error('Geçersiz yedek dosyası'));
-      }
-    };
-    reader.onerror = () => reject(new Error('Dosya okunamadı'));
-    reader.readAsText(file);
-  });
-};
-
-// Save service order to localStorage
 export const saveServiceOrder = (services: ServiceRecord[]) => {
   try {
     const orderData = services.map((service, index) => ({
@@ -117,7 +80,6 @@ export const saveServiceOrder = (services: ServiceRecord[]) => {
   }
 };
 
-// Load service order from localStorage
 export const loadServiceOrder = (): { [key: string]: number } => {
   try {
     const orderData = localStorage.getItem('serviceOrder');
@@ -135,19 +97,16 @@ export const loadServiceOrder = (): { [key: string]: number } => {
   return {};
 };
 
-// Apply saved order to services
 export const applySavedOrder = (services: ServiceRecord[]): ServiceRecord[] => {
   const orderMap = loadServiceOrder();
   
-  // If no saved order, return as is
   if (Object.keys(orderMap).length === 0) {
     return services;
   }
   
-  // Sort services based on saved order
   return services.sort((a, b) => {
     const orderA = orderMap[a.id] ?? 999999;
     const orderB = orderMap[b.id] ?? 999999;
     return orderA - orderB;
   });
-};
+}

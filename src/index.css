@@ -2,7 +2,6 @@
 @tailwind components;
 @tailwind utilities;
 
-/* Mobile viewport fix */
 @layer base {
   html, body {
     height: 100%;
@@ -17,7 +16,6 @@
     padding: 0;
   }
   
-  /* Prevent overscroll bounce on iOS */
   body {
     position: relative;
     width: 100%;
@@ -27,25 +25,21 @@
     padding: 0;
   }
   
-  /* Fix for mobile browsers address bar */
   @supports (-webkit-touch-callout: none) {
     body {
       height: -webkit-fill-available;
     }
   }
   
-  /* Remove default margins and paddings */
   * {
     box-sizing: border-box;
   }
   
-  /* Ensure full height usage */
   .h-screen {
     height: 100vh;
     height: 100dvh; /* Dynamic viewport height for mobile */
   }
   
-  /* Enable text selection on mobile */
   .user-select-text {
     -webkit-user-select: text;
     -moz-user-select: text;
@@ -54,7 +48,6 @@
     -webkit-touch-callout: default;
   }
   
-  /* Improve text selection on mobile */
   .select-text {
     -webkit-user-select: text;
     -moz-user-select: text;
@@ -62,7 +55,6 @@
     user-select: text;
   }
 
-  /* Shimmer Animation */
   .shimmer {
     position: relative;
     overflow: hidden;
@@ -99,7 +91,6 @@
     }
   }
 
-  /* Light background pattern */
   .app-bg {
     background-color: #f8fafc;
   }

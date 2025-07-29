@@ -9,7 +9,6 @@ export interface ServiceRecord {
   createdAt: string;
   updatedAt: string;
   order?: number;
-  // Legacy fields for backward compatibility
   date?: string;
   phoneNumber?: string;
   feeCollected?: number;

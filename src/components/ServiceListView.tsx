@@ -7,7 +7,6 @@ import {
   XIcon
 } from 'lucide-react';
 import { ServiceRecord } from '../types';
-import { saveServiceOrder } from '../utils/helpers';
 
 interface ServiceListViewProps {
   services: ServiceRecord[];
@@ -21,32 +20,17 @@ interface ServiceListViewProps {
 
 const getColorClasses = (color: string) => {
   const colorMap: { [key: string]: { bg: string; border: string } } = {
-    white: { bg: 'bg-white', border: 'border-gray-400' },
-    red: { bg: 'bg-red-100', border: 'border-red-400' },
-    orange: { bg: 'bg-orange-100', border: 'border-orange-400' },
-    yellow: { bg: 'bg-yellow-100', border: 'border-yellow-400' },
-    green: { bg: 'bg-green-100', border: 'border-green-400' },
-    blue: { bg: 'bg-blue-100', border: 'border-blue-400' },
-    purple: { bg: 'bg-purple-100', border: 'border-purple-400' },
-    pink: { bg: 'bg-pink-100', border: 'border-pink-400' },
-    gray: { bg: 'bg-gray-100', border: 'border-gray-400' },
+    white: { bg: 'bg-white', border: 'border-gray-300', text: 'text-gray-700' },
+    red: { bg: 'bg-red-100', border: 'border-red-300', text: 'text-red-700' },
+    orange: { bg: 'bg-orange-100', border: 'border-orange-300', text: 'text-orange-700' },
+    yellow: { bg: 'bg-yellow-100', border: 'border-yellow-300', text: 'text-yellow-700' },
+    green: { bg: 'bg-green-100', border: 'border-green-300', text: 'text-green-700' },
+    blue: { bg: 'bg-blue-100', border: 'border-blue-300', text: 'text-blue-700' },
+    purple: { bg: 'bg-purple-100', border: 'border-purple-300', text: 'text-purple-700' },
+    pink: { bg: 'bg-pink-100', border: 'border-pink-300', text: 'text-pink-700' },
+    gray: { bg: 'bg-gray-100', border: 'border-gray-300', text: 'text-gray-700' },
   };
   return colorMap[color] || colorMap.white;
-};
-
-const getTextColorClasses = (color: string) => {
-  const textColorMap: { [key: string]: { phone: string; address: string; button: string } } = {
-    white: { phone: 'text-blue-700', address: 'text-gray-800', button: 'border-blue-300 hover:border-blue-400' },
-    red: { phone: 'text-red-700', address: 'text-red-800', button: 'border-red-300 hover:border-red-400' },
-    orange: { phone: 'text-orange-700', address: 'text-orange-800', button: 'border-orange-300 hover:border-orange-400' },
-    yellow: { phone: 'text-yellow-700', address: 'text-yellow-800', button: 'border-yellow-300 hover:border-yellow-400' },
-    green: { phone: 'text-green-700', address: 'text-green-800', button: 'border-green-300 hover:border-green-400' },
-    blue: { phone: 'text-blue-700', address: 'text-blue-800', button: 'border-blue-300 hover:border-blue-400' },
-    purple: { phone: 'text-purple-700', address: 'text-purple-800', button: 'border-purple-300 hover:border-purple-400' },
-    pink: { phone: 'text-pink-700', address: 'text-pink-800', button: 'border-pink-300 hover:border-pink-400' },
-    gray: { phone: 'text-gray-700', address: 'text-gray-800', button: 'border-gray-300 hover:border-gray-400' },
-  };
-  return textColorMap[color] || textColorMap.white;
 };
 
 const ServiceListView: React.FC<ServiceListViewProps> = ({ 
@@ -62,7 +46,6 @@ const ServiceListView: React.FC<ServiceListViewProps> = ({
   const [draggedIndex, setDraggedIndex] = useState<number | null>(null);
   const [shareModalService, setShareModalService] = useState<ServiceRecord | null>(null);
 
-  // Filter services based on search and status
   const filteredServices = services.filter(service => {
     const phone = service.customerPhone || service.phoneNumber || '';
     const address = service.address || service.description || '';
@@ -74,7 +57,6 @@ const ServiceListView: React.FC<ServiceListViewProps> = ({
     return matchesSearch && matchesStatus;
   });
 
-  // Show services only when a status is selected (not 'all')
   const servicesToShow = statusFilter === 'all' ? [] : filteredServices;
 
   const getStatusTitle = () => {
@@ -93,7 +75,6 @@ const ServiceListView: React.FC<ServiceListViewProps> = ({
   const handleShareService = (service: ServiceRecord) => {
     const address = service.address || service.description || '';
     
-    // Check if native sharing is supported
     if (navigator.share) {
       navigator.share({
         title: 'Servis Adresi',
@@ -102,7 +83,6 @@ const ServiceListView: React.FC<ServiceListViewProps> = ({
         console.log('Paylaşım iptal edildi:', error);
       });
     } else {
-      // Fallback to custom modal for unsupported browsers
       setShareModalService(service);
     }
   };
@@ -125,7 +105,6 @@ const ServiceListView: React.FC<ServiceListViewProps> = ({
       await navigator.clipboard.writeText(text);
       alert('Servis bilgileri panoya kopyalandı!');
     } catch (err) {
-      // Fallback for older browsers
       const textArea = document.createElement('textarea');
       textArea.value = text;
       document.body.appendChild(textArea);
@@ -156,12 +135,10 @@ const ServiceListView: React.FC<ServiceListViewProps> = ({
       return;
     }
 
-    // Create a copy of the filtered services for reordering
     const reorderedServices = [...servicesToShow];
     const [draggedService] = reorderedServices.splice(draggedIndex, 1);
     reorderedServices.splice(dropIndex, 0, draggedService);
 
-    // Create a new services array with the reordered filtered services
     const serviceMap = new Map(reorderedServices.map((service, index) => [service.id, { ...service, order: index }]));
     
     const updatedServices = services.map(service => {
@@ -171,7 +148,6 @@ const ServiceListView: React.FC<ServiceListViewProps> = ({
       return service;
     });
 
-    // Sort by the new order for filtered services, keep others in original position
     const finalServices = updatedServices.sort((a, b) => {
       const aInFiltered = serviceMap.has(a.id);
       const bInFiltered = serviceMap.has(b.id);
@@ -195,8 +171,8 @@ const ServiceListView: React.FC<ServiceListViewProps> = ({
   };
 
   return (
-    <div className="shadow-sm border-0 border-t border-gray-100 flex flex-col">
-      <div className="p-1.5 border-b border-gray-100">
+    <div className="flex flex-col">
+      <div className="px-2 py-1.5 border-b border-gray-100 bg-white">
         <div className="flex items-center justify-between mb-2">
           <div className="flex items-center space-x-2">
             <h2 className="text-xs font-semibold text-gray-900 truncate">{getStatusTitle()}</h2>
@@ -226,10 +202,9 @@ const ServiceListView: React.FC<ServiceListViewProps> = ({
         )}
       </div>
 
-      <div className="divide-y divide-gray-50">
+      <div className="px-1">
         {servicesToShow.map((service, index) => {
           const colorClasses = getColorClasses(service.color || 'blue');
-          const textColorClasses = getTextColorClasses(service.color || 'blue');
           const isDragging = draggedIndex === index;
           
           return (
@@ -240,9 +215,9 @@ const ServiceListView: React.FC<ServiceListViewProps> = ({
               onDragOver={handleDragOver}
               onDrop={(e) => handleDrop(e, index)}
               onDragEnd={handleDragEnd}
-              className={`p-1.5 transition-all duration-200 border ${colorClasses.border} ${colorClasses.bg} ${
+              className={`p-2 mb-0.5 transition-all duration-200 rounded-md border ${colorClasses.border} ${colorClasses.bg} ${
                 isDragging ? 'opacity-50 transform scale-[1.02] shadow-lg z-10' : ''
-              } ${servicesToShow.length > 1 ? 'cursor-grab active:cursor-grabbing' : 'cursor-pointer'} min-h-[48px]`}
+              } ${servicesToShow.length > 1 ? 'cursor-grab active:cursor-grabbing' : 'cursor-pointer'} min-h-[52px]`}
             >
               <div className="flex items-start justify-between">
                 <div className="flex items-start space-x-1.5 flex-1 min-w-0">
@@ -257,14 +232,14 @@ const ServiceListView: React.FC<ServiceListViewProps> = ({
                           const phone = service.customerPhone || service.phoneNumber || '';
                           handlePhoneClick(phone);
                         }}
-                        className={`${textColorClasses.phone} hover:opacity-80 text-xs bg-white px-2 py-1.5 rounded-sm border ${textColorClasses.button} transition-all min-h-[28px] flex items-center shadow-sm`}
+                        className={`${colorClasses.text} hover:opacity-80 text-xs bg-white px-2 py-1.5 rounded-sm border ${colorClasses.border} hover:border-opacity-80 transition-all min-h-[28px] flex items-center`}
                       >
                         {service.customerPhone || service.phoneNumber}
                       </button>
                     </div>
                     
                     <div className="min-h-[24px] flex items-start">
-                      <p className={`text-xs ${textColorClasses.address} line-clamp-2 leading-snug break-words overflow-wrap-anywhere`}>
+                      <p className={`text-xs ${colorClasses.text} line-clamp-2 leading-snug break-words overflow-wrap-anywhere`}>
                       {service.address || service.description}
                       </p>
                     </div>
@@ -277,7 +252,7 @@ const ServiceListView: React.FC<ServiceListViewProps> = ({
                       e.stopPropagation();
                       handleShareService(service);
                     }}
-                    className="p-1 text-gray-400 hover:text-green-600 transition-colors rounded-sm hover:bg-green-50 min-w-[26px] min-h-[26px] flex items-center justify-center"
+                    className={`p-1 ${colorClasses.text} opacity-60 hover:opacity-100 transition-opacity rounded-sm min-w-[26px] min-h-[26px] flex items-center justify-center`}
                   >
                     <ShareIcon className="h-3 w-3" />
                   </button>
@@ -286,7 +261,7 @@ const ServiceListView: React.FC<ServiceListViewProps> = ({
                       e.stopPropagation();
                       onEditService(service);
                     }}
-                    className="p-1 text-gray-400 hover:text-blue-600 transition-colors rounded-sm hover:bg-blue-50 min-w-[26px] min-h-[26px] flex items-center justify-center"
+                    className={`p-1 ${colorClasses.text} opacity-60 hover:opacity-100 transition-opacity rounded-sm min-w-[26px] min-h-[26px] flex items-center justify-center`}
                   >
                     <EditIcon className="h-3 w-3" />
                   </button>
@@ -295,7 +270,7 @@ const ServiceListView: React.FC<ServiceListViewProps> = ({
                       e.stopPropagation();
                       onDeleteService(service.id);
                     }}
-                    className="p-1 text-gray-400 hover:text-red-600 transition-colors rounded-sm hover:bg-red-50 min-w-[26px] min-h-[26px] flex items-center justify-center"
+                    className={`p-1 ${colorClasses.text} opacity-60 hover:opacity-100 transition-opacity rounded-sm min-w-[26px] min-h-[26px] flex items-center justify-center`}
                   >
                     <TrashIcon className="h-3 w-3" />
                   </button>
@@ -312,7 +287,6 @@ const ServiceListView: React.FC<ServiceListViewProps> = ({
         </div>
       )}
       
-      {/* Share Modal */}
       {shareModalService && (
         <div className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center p-4 z-50">
           <div className="bg-white rounded-xl shadow-2xl max-w-sm w-full mx-4">
