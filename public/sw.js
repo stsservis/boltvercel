@@ -1,4 +1,4 @@
-const CACHE_NAME = 'sts-servis-v2';
+const CACHE_NAME = 'sts-servis-v3';
 const urlsToCache = [
   '/',
   '/index.html',
@@ -9,11 +9,11 @@ const urlsToCache = [
 
 // Install event - cache resources
 self.addEventListener('install', (event) => {
-  console.log('Service Worker installing...');
+  console.log('Service Worker installing... v3');
   event.waitUntil(
     caches.open(CACHE_NAME)
       .then((cache) => {
-        console.log('Caching app shell');
+        console.log('Caching app shell v3');
         return cache.addAll(urlsToCache);
       })
       .then(() => {
@@ -25,7 +25,7 @@ self.addEventListener('install', (event) => {
 
 // Activate event - clean up old caches
 self.addEventListener('activate', (event) => {
-  console.log('Service Worker activating...');
+  console.log('Service Worker activating... v3');
   event.waitUntil(
     caches.keys().then((cacheNames) => {
       return Promise.all(
