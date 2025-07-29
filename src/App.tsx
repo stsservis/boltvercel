@@ -1,12 +1,13 @@
 import React, { useState, useRef } from 'react';
+import AuthWrapper from './components/AuthWrapper';
 import Header from './components/Header';
-import Dashboard from './components/Dashboard';
 import ServiceListView from './components/ServiceListView';
 import ServiceForm from './components/ServiceForm';
 import Notes from './components/Notes';
 import Reports from './components/Reports';
 import Backup from './components/Backup';
 import ServiceDetail from './components/ServiceDetail';
+import Dashboard from './components/Dashboard';
 import { ServiceRecord } from './types';
 import { saveServiceOrder, applySavedOrder, generateId } from './utils/helpers';
 
@@ -401,6 +402,7 @@ function App() {
   };
 
   return (
+    <AuthWrapper>
     <div className="min-h-screen whatsapp-bg">
       {/* Loading State */}
       {loading && (
@@ -462,6 +464,7 @@ function App() {
         />
       )}
     </div>
+    </AuthWrapper>
   );
 }
 
