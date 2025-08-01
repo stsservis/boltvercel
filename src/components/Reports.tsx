@@ -249,4 +249,20 @@ export default function Reports({ services, onViewService, onReorderServices }: 
       <div className="bg-white rounded-md shadow-sm p-1.5">
         <div className="flex items-center justify-between mb-1.5">
           <h2 className="text-xs font-semibold text-gray-900">
-            <span className="break-words"
+            <span className="break-words">Yıllık Özet ({selectedYear})</span>
+          </h2>
+          <button
+            onClick={() => setShowYearlyStats(!showYearlyStats)}
+            className="text-xs text-blue-600 hover:text-blue-800 focus:outline-none"
+          >
+            {showYearlyStats ? (
+              <ChevronUpIcon className="w-3 h-3" />
+            ) : (
+              <ChevronDownIcon className="w-3 h-3" />
+            )}
+          </button>
+        </div>
+      </div>
+    </div>
+  );
+}
