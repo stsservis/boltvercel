@@ -232,14 +232,14 @@ const ServiceListView: React.FC<ServiceListViewProps> = ({
                           const phone = service.customerPhone || service.phoneNumber || '';
                           handlePhoneClick(phone);
                         }}
-                        className={`${colorClasses.text} hover:opacity-80 text-xs bg-white px-2 py-1.5 rounded-sm border ${colorClasses.border} hover:border-opacity-80 transition-all min-h-[28px] flex items-center`}
+                        className="text-blue-600 hover:text-blue-800 text-xs font-bold transition-all min-h-[28px] flex items-center"
                       >
                         {service.customerPhone || service.phoneNumber}
                       </button>
                     </div>
                     
                     <div className="min-h-[24px] flex items-start">
-                      <p className={`text-xs ${colorClasses.text} line-clamp-2 leading-snug break-words overflow-wrap-anywhere`}>
+                      <p className={`text-sm ${colorClasses.text} line-clamp-2 leading-snug break-words overflow-wrap-anywhere`}>
                       {service.address || service.description}
                       </p>
                     </div>

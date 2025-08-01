@@ -39,8 +39,8 @@ const Dashboard: React.FC<DashboardProps> = ({
       <div className="grid grid-cols-3 gap-1">
         <button 
           onClick={() => onStatusCardClick('ongoing')}
-          className={`bg-gradient-to-br from-yellow-400 to-yellow-600 shimmer rounded-md p-2 text-white transition-all duration-200 min-h-[50px] shadow-sm hover:shadow-md ${
-            statusFilter === 'ongoing' ? 'ring-2 ring-yellow-300 ring-offset-2 scale-105' : 'hover:scale-105'
+          className={`bg-gradient-to-br from-blue-400 to-blue-600 shimmer rounded-md p-2 text-white transition-all duration-200 min-h-[50px] shadow-sm hover:shadow-md ${
+            statusFilter === 'ongoing' ? 'ring-2 ring-blue-300 ring-offset-2 scale-105' : 'hover:scale-105'
           }`}
         >
           <div className="flex items-center justify-between">
@@ -54,8 +54,8 @@ const Dashboard: React.FC<DashboardProps> = ({
 
         <button 
           onClick={() => onStatusCardClick('workshop')}
-          className={`bg-gradient-to-br from-orange-400 to-orange-600 shimmer rounded-md p-2 text-white transition-all duration-200 min-h-[50px] shadow-sm hover:shadow-md ${
-            statusFilter === 'workshop' ? 'ring-2 ring-orange-300 ring-offset-2 scale-105' : 'hover:scale-105'
+          className={`bg-gradient-to-br from-indigo-400 to-indigo-600 shimmer rounded-md p-2 text-white transition-all duration-200 min-h-[50px] shadow-sm hover:shadow-md ${
+            statusFilter === 'workshop' ? 'ring-2 ring-indigo-300 ring-offset-2 scale-105' : 'hover:scale-105'
           }`}
         >
           <div className="flex items-center justify-between">
@@ -69,8 +69,8 @@ const Dashboard: React.FC<DashboardProps> = ({
 
         <button 
           onClick={() => onStatusCardClick('completed')}
-          className={`bg-gradient-to-br from-green-400 to-green-600 shimmer rounded-md p-2 text-white transition-all duration-200 min-h-[50px] shadow-sm hover:shadow-md ${
-            statusFilter === 'completed' ? 'ring-2 ring-green-300 ring-offset-2 scale-105' : 'hover:scale-105'
+          className={`bg-gradient-to-br from-cyan-400 to-cyan-600 shimmer rounded-md p-2 text-white transition-all duration-200 min-h-[50px] shadow-sm hover:shadow-md ${
+            statusFilter === 'completed' ? 'ring-2 ring-cyan-300 ring-offset-2 scale-105' : 'hover:scale-105'
           }`}
         >
           <div className="flex items-center justify-between">

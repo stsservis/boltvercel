@@ -75,7 +75,7 @@
       rgba(255, 255, 255, 0.2),
       transparent
     );
-    animation: shimmer-slide 3s ease-in-out infinite;
+    animation: shimmer-slide 2s ease-in-out infinite;
     border-radius: inherit;
   }
 
