@@ -232,7 +232,7 @@ const ServiceListView: React.FC<ServiceListViewProps> = ({
                           const phone = service.customerPhone || service.phoneNumber || '';
                           handlePhoneClick(phone);
                         }}
-                        className="text-blue-600 hover:text-blue-800 text-xs font-bold transition-all min-h-[28px] flex items-center"
+                        className="text-blue-600 hover:text-blue-800 text-sm font-bold transition-all min-h-[32px] flex items-center px-1 py-1 rounded-sm hover:bg-blue-50"
                       >
                         {service.customerPhone || service.phoneNumber}
                       </button>

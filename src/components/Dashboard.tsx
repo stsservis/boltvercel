@@ -39,7 +39,7 @@ const Dashboard: React.FC<DashboardProps> = ({
       <div className="grid grid-cols-3 gap-1">
         <button 
           onClick={() => onStatusCardClick('ongoing')}
-          className={`bg-gradient-to-br from-blue-400 to-blue-600 shimmer rounded-md p-2 text-white transition-all duration-200 min-h-[50px] shadow-sm hover:shadow-md ${
+          className={`bg-gradient-to-br from-sky-300 to-sky-500 shimmer rounded-md p-2 text-white transition-all duration-200 min-h-[50px] shadow-sm hover:shadow-md ${
             statusFilter === 'ongoing' ? 'ring-2 ring-blue-300 ring-offset-2 scale-105' : 'hover:scale-105'
           }`}
         >
@@ -54,7 +54,7 @@ const Dashboard: React.FC<DashboardProps> = ({
 
         <button 
           onClick={() => onStatusCardClick('workshop')}
-          className={`bg-gradient-to-br from-indigo-400 to-indigo-600 shimmer rounded-md p-2 text-white transition-all duration-200 min-h-[50px] shadow-sm hover:shadow-md ${
+          className={`bg-gradient-to-br from-blue-500 to-blue-700 shimmer rounded-md p-2 text-white transition-all duration-200 min-h-[50px] shadow-sm hover:shadow-md ${
             statusFilter === 'workshop' ? 'ring-2 ring-indigo-300 ring-offset-2 scale-105' : 'hover:scale-105'
           }`}
         >
@@ -69,7 +69,7 @@ const Dashboard: React.FC<DashboardProps> = ({
 
         <button 
           onClick={() => onStatusCardClick('completed')}
-          className={`bg-gradient-to-br from-cyan-400 to-cyan-600 shimmer rounded-md p-2 text-white transition-all duration-200 min-h-[50px] shadow-sm hover:shadow-md ${
+          className={`bg-gradient-to-br from-blue-700 to-blue-900 shimmer rounded-md p-2 text-white transition-all duration-200 min-h-[50px] shadow-sm hover:shadow-md ${
             statusFilter === 'completed' ? 'ring-2 ring-cyan-300 ring-offset-2 scale-105' : 'hover:scale-105'
           }`}
         >

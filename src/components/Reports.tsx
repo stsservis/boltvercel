@@ -249,6 +249,63 @@ export default function Reports({ services, onViewService, onReorderServices }: 
       <div className="bg-white rounded-md shadow-sm p-1.5">
         <div className="flex items-center justify-between mb-1.5">
           <h2 className="text-xs font-semibold text-gray-900">
+            <span className="break-words">Aylık Özet ({months.find(m => m.value === selectedMonth)?.label} {selectedYear})</span>
+          </h2>
+          <button
+            onClick={() => setShowMonthlyDetails(!showMonthlyDetails)}
+            className="text-xs text-blue-600 hover:text-blue-800 focus:outline-none"
+          >
+            {showMonthlyDetails ? (
+              <ChevronUpIcon className="w-3 h-3" />
+            ) : (
+              <ChevronDownIcon className="w-3 h-3" />
+            )}
+          </button>
+        </div>
+        
+        {showMonthlyDetails && (
+          <div className="space-y-1.5">
+            <div className="grid grid-cols-2 gap-1.5">
+              <div className="bg-green-50 rounded p-1.5 border border-green-200 text-center min-h-[40px] flex flex-col justify-center">
+                <div className="text-xs text-gray-500">Gelir</div>
+                <div className="font-bold text-green-600 text-xs break-words">{formatCurrency(monthlyRevenue)}</div>
+              </div>
+              <div className="bg-red-50 rounded p-1.5 border border-red-200 text-center min-h-[40px] flex flex-col justify-center">
+                <div className="text-xs text-gray-500">Gider</div>
+                <div className="font-bold text-red-600 text-xs break-words">{formatCurrency(monthlyExpenses)}</div>
+              </div>
+            </div>
+            
+            <div className="bg-blue-50 rounded p-1.5 border border-blue-200 space-y-1 text-xs">
+              <div className="flex justify-between items-center">
+                <span className="text-gray-600">Net Kâr:</span>
+                <span className={`font-medium break-words ${monthlyNetProfit >= 0 ? 'text-blue-600' : 'text-red-600'}`}>
+                  {formatCurrency(monthlyNetProfit)}
+                </span>
+              </div>
+              <div className="flex justify-between items-center">
+                <span className="text-gray-600">Kâr Payı (%30):</span>
+                <span className="font-medium text-orange-600 break-words">{formatCurrency(monthlyProfitShare)}</span>
+              </div>
+              <div className="flex justify-between items-center border-t pt-1">
+                <span className="text-gray-600">Kalan Tutar:</span>
+                <span className={`font-bold break-words ${monthlyRemaining >= 0 ? 'text-green-600' : 'text-red-600'}`}>
+                  {formatCurrency(monthlyRemaining)}
+                </span>
+              </div>
+            </div>
+            
+            <div className="text-center text-xs text-gray-500 bg-gray-50 rounded p-1.5">
+              Toplam {filteredServices.length} tamamlanan servis
+            </div>
+          </div>
+        )}
+      </div>
+
+      {/* Yearly Summary */}
+      <div className="bg-white rounded-md shadow-sm p-1.5">
+        <div className="flex items-center justify-between mb-1.5">
+          <h2 className="text-xs font-semibold text-gray-900">
             <span className="break-words">Yıllık Özet ({selectedYear})</span>
           </h2>
           <button
@@ -262,6 +319,44 @@ export default function Reports({ services, onViewService, onReorderServices }: 
             )}
           </button>
         </div>
+        
+        {showYearlyStats && (
+          <div className="space-y-1.5">
+            <div className="grid grid-cols-2 gap-1.5">
+              <div className="bg-green-50 rounded p-1.5 border border-green-200 text-center min-h-[40px] flex flex-col justify-center">
+                <div className="text-xs text-gray-500">Gelir</div>
+                <div className="font-bold text-green-600 text-xs break-words">{formatCurrency(yearlyRevenue)}</div>
+              </div>
+              <div className="bg-red-50 rounded p-1.5 border border-red-200 text-center min-h-[40px] flex flex-col justify-center">
+                <div className="text-xs text-gray-500">Gider</div>
+                <div className="font-bold text-red-600 text-xs break-words">{formatCurrency(yearlyExpenses)}</div>
+              </div>
+            </div>
+            
+            <div className="bg-blue-50 rounded p-1.5 border border-blue-200 space-y-1 text-xs">
+              <div className="flex justify-between items-center">
+                <span className="text-gray-600">Net Kâr:</span>
+                <span className={`font-medium break-words ${yearlyNetProfit >= 0 ? 'text-blue-600' : 'text-red-600'}`}>
+                  {formatCurrency(yearlyNetProfit)}
+                </span>
+              </div>
+              <div className="flex justify-between items-center">
+                <span className="text-gray-600">Kâr Payı (%30):</span>
+                <span className="font-medium text-orange-600 break-words">{formatCurrency(yearlyProfitShare)}</span>
+              </div>
+              <div className="flex justify-between items-center border-t pt-1">
+                <span className="text-gray-600">Kalan Tutar:</span>
+                <span className={`font-bold break-words ${yearlyRemaining >= 0 ? 'text-green-600' : 'text-red-600'}`}>
+                  {formatCurrency(yearlyRemaining)}
+                </span>
+              </div>
+            </div>
+            
+            <div className="text-center text-xs text-gray-500 bg-gray-50 rounded p-1.5">
+              Toplam {yearlyServices.length} tamamlanan servis
+            </div>
+          </div>
+        )}
       </div>
     </div>
   );
