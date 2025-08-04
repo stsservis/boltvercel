@@ -1,7 +1,7 @@
 import React, { useState } from 'react';
 import { ServiceRecord } from '../types';
 import { formatCurrency, formatDate } from '../utils/helpers';
-import { ChevronUpIcon, ChevronDownIcon } from 'lucide-react';
+import { ChevronUpIcon, ChevronDownIcon, SearchIcon } from 'lucide-react';
 import { saveServiceOrder } from '../utils/helpers';
 
 interface ReportsProps {
@@ -15,6 +15,9 @@ export default function Reports({ services, onViewService, onReorderServices }: 
   const [selectedYear, setSelectedYear] = useState(new Date().getFullYear());
   const [showYearlyStats, setShowYearlyStats] = useState(false);
   const [showMonthlyDetails, setShowMonthlyDetails] = useState(false);
+  const [showServicesList, setShowServicesList] = useState(false);
+  const [searchTerm, setSearchTerm] = useState('');
+  const [dateFilter, setDateFilter] = useState('');
   const [draggedIndex, setDraggedIndex] = useState<number | null>(null);
   const [sortConfig, setSortConfig] = useState<{
     key: 'date' | 'address' | 'phone' | 'revenue' | 'expenses' | 'profit' | 'remaining' | null;
@@ -28,6 +31,28 @@ export default function Reports({ services, onViewService, onReorderServices }: 
            serviceDate.getMonth() + 1 === selectedMonth && 
            serviceDate.getFullYear() === selectedYear;
   });
+
+  // Apply search and date filters
+  if (searchTerm || dateFilter) {
+    filteredServices = filteredServices.filter(service => {
+      const phone = service.customerPhone || service.phoneNumber || '';
+      const address = service.address || service.description || '';
+      const serviceDate = service.createdAt ? new Date(service.createdAt) : new Date(service.date || '');
+      
+      const matchesSearch = !searchTerm || 
+        phone.includes(searchTerm) ||
+        address.toLowerCase().includes(searchTerm.toLowerCase());
+      
+      const matchesDate = !dateFilter || 
+        serviceDate.toISOString().includes(dateFilter) ||
+        serviceDate.toLocaleDateString('tr-TR').includes(dateFilter) ||
+        serviceDate.getFullYear().toString().includes(dateFilter) ||
+        (serviceDate.getMonth() + 1).toString().padStart(2, '0').includes(dateFilter) ||
+        serviceDate.getDate().toString().padStart(2, '0').includes(dateFilter);
+      
+      return matchesSearch && matchesDate;
+    });
+  }
 
   // Apply sorting
   if (sortConfig.key) {
@@ -295,6 +320,13 @@ export default function Reports({ services, onViewService, onReorderServices }: 
               </div>
             </div>
             
+            <button
+              onClick={() => setShowServicesList(!showServicesList)}
+              className="w-full bg-blue-600 text-white py-2 px-3 rounded-md hover:bg-blue-700 transition-colors text-xs font-medium"
+            >
+              {showServicesList ? 'Servis Listesini Gizle' : 'Servis Listesini Göster'}
+            </button>
+            
             <div className="text-center text-xs text-gray-500 bg-gray-50 rounded p-1.5">
               Toplam {filteredServices.length} tamamlanan servis
             </div>
@@ -358,6 +390,140 @@ export default function Reports({ services, onViewService, onReorderServices }: 
           </div>
         )}
       </div>
+
+      {/* Servis Listesi - Horizontal Scroll Table */}
+      {showServicesList && (
+        <div className="bg-white rounded-md shadow-sm p-1.5">
+          <div className="flex items-center justify-between mb-2">
+            <h3 className="text-xs font-semibold text-gray-900">
+              {months.find(m => m.value === selectedMonth)?.label} {selectedYear} Servisleri
+            </h3>
+            <span className="text-xs text-gray-500">Toplam: {filteredServices.length} servis</span>
+          </div>
+          
+          {/* Search Filter */}
+          <div className="mb-2">
+            <div className="relative">
+              <SearchIcon className="absolute left-2 top-1/2 transform -translate-y-1/2 h-3 w-3 text-gray-400" />
+              <input
+                type="text"
+                placeholder="Akıllı arama: tarih, telefon, adres veya anahtar kelime..."
+                className="w-full pl-6 pr-2 py-1.5 border border-gray-300 rounded-sm focus:ring-1 focus:ring-blue-500 focus:border-transparent text-xs min-h-[28px]"
+                value={searchTerm}
+                onChange={(e) => setSearchTerm(e.target.value)}
+              />
+            </div>
+          </div>
+          
+          {/* Horizontal Scroll Table */}
+          <div className="overflow-x-auto">
+            <div className="min-w-[900px]">
+              {/* Table Header */}
+              <div className="grid grid-cols-8 gap-2 bg-gray-50 p-2 rounded text-xs font-medium text-gray-700 mb-1">
+                <button
+                  onClick={() => handleSort('date')}
+                  className="flex items-center justify-between hover:bg-gray-100 p-1 rounded text-left"
+                >
+                  <span>Tarih</span>
+                  {getSortIcon('date')}
+                </button>
+                <button
+                  onClick={() => handleSort('phone')}
+                  className="flex items-center justify-between hover:bg-gray-100 p-1 rounded text-left"
+                >
+                  <span>Telefon</span>
+                  {getSortIcon('phone')}
+                </button>
+                <button
+                  onClick={() => handleSort('address')}
+                  className="flex items-center justify-between hover:bg-gray-100 p-1 rounded text-left col-span-1"
+                >
+                  <span>Adres</span>
+                  {getSortIcon('address')}
+                </button>
+                <button
+                  onClick={() => handleSort('revenue')}
+                  className="flex items-center justify-between hover:bg-gray-100 p-1 rounded text-left"
+                >
+                  <span>Gelir</span>
+                  {getSortIcon('revenue')}
+                </button>
+                <button
+                  onClick={() => handleSort('expenses')}
+                  className="flex items-center justify-between hover:bg-gray-100 p-1 rounded text-left"
+                >
+                  <span>Gider</span>
+                  {getSortIcon('expenses')}
+                </button>
+                <button
+                  onClick={() => handleSort('profit')}
+                  className="flex items-center justify-between hover:bg-gray-100 p-1 rounded text-left"
+                >
+                  <span>Net Kâr</span>
+                  {getSortIcon('profit')}
+                </button>
+                <button
+                  onClick={() => handleSort('remaining')}
+                  className="flex items-center justify-between hover:bg-gray-100 p-1 rounded text-left"
+                >
+                  <span>Kalan</span>
+                  {getSortIcon('remaining')}
+                </button>
+              </div>
+              
+              {/* Table Body */}
+              <div className="space-y-1">
+                {filteredServices.map((service) => {
+                  const cost = service.cost || service.feeCollected || 0;
+                  const profit = cost - service.expenses;
+                  const profitShare = profit * 0.3;
+                  const remaining = profit - profitShare; // Kalan = Net Kâr - Kâr Payı
+                  const serviceDate = service.createdAt ? new Date(service.createdAt) : new Date(service.date || '');
+                  
+                  return (
+                    <div
+                      key={service.id}
+                      onClick={() => onViewService(service)}
+                      className="grid grid-cols-8 gap-2 p-2 bg-gray-50 hover:bg-blue-50 rounded text-xs cursor-pointer transition-colors"
+                    >
+                      <div className="text-gray-700">
+                        {serviceDate.toLocaleDateString('tr-TR', { day: '2-digit', month: '2-digit' })}
+                      </div>
+                      <div className="text-blue-600 font-medium break-all">
+                        {service.customerPhone || service.phoneNumber}
+                      </div>
+                      <div className="text-gray-700 break-words">
+                        {service.address || service.description}
+                      </div>
+                      <div className="text-green-600 font-medium text-right">
+                        {formatCurrency(cost)}
+                      </div>
+                      <div className="text-red-600 font-medium text-right">
+                        {formatCurrency(service.expenses)}
+                      </div>
+                      <div className={`font-medium text-right ${profit >= 0 ? 'text-blue-600' : 'text-red-600'}`}>
+                        {formatCurrency(profit)}
+                      </div>
+                      <div className="text-orange-600 font-medium text-right">
+                        {formatCurrency(profitShare)}
+                      </div>
+                      <div className={`font-bold text-right ${remaining >= 0 ? 'text-green-600' : 'text-red-600'}`}>
+                        {formatCurrency(remaining)}
+                      </div>
+                    </div>
+                  );
+                })}
+              </div>
+              
+              {filteredServices.length === 0 && (
+                <div className="text-center py-4 text-gray-500 text-xs">
+                  {searchTerm || dateFilter ? 'Filtreye uygun servis bulunamadı' : 'Bu dönemde tamamlanan servis bulunmuyor'}
+                </div>
+              )}
+            </div>
+          </div>
+        </div>
+      )}
     </div>
   );
 }

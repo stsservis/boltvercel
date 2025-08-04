@@ -2,6 +2,8 @@ import React, { useState, useEffect } from 'react';
 import { ServiceRecord } from '../types';
 import { generateId, formatCurrency } from '../utils/helpers';
 
+const STS_TEMP_SERVICE_FORM_DATA = 'sts_temp_service_form_data';
+
 interface ServiceFormProps {
   service?: ServiceRecord;
   onSave: (service: ServiceRecord) => void;
@@ -41,12 +43,13 @@ const ServiceForm: React.FC<ServiceFormProps> = ({
 
   // Format phone number from +90 to 0 format
   const formatPhoneNumber = (phone: string): string => {
-    // Only remove spaces and some special characters, keep letters and numbers
-    let cleaned = phone.replace(/[\s\-\(\)]/g, '');
+    // Only remove dashes and parentheses, keep spaces, letters and numbers
+    let cleaned = phone.replace(/[\-\(\)]/g, '');
     
     // If starts with +90, replace with 0
-    if (cleaned.startsWith('+90')) {
-      cleaned = '0' + cleaned.substring(3);
+    if (cleaned.replace(/\s/g, '').startsWith('+90')) {
+      // Remove +90 and add 0, preserving spaces
+      cleaned = cleaned.replace('+90', '0');
     }
     
     return cleaned;
@@ -63,19 +66,46 @@ const ServiceForm: React.FC<ServiceFormProps> = ({
         updatedAt: new Date().toISOString(),
       });
     } else {
-      // Always reset form completely when no service is provided (new service)
-      const newId = generateId();
-      setFormData({
-        id: newId,
-        customerPhone: '',
-        address: '',
-        color: 'white',
-        cost: 0,
-        expenses: 0,
-        status: 'ongoing',
-        createdAt: new Date().toISOString(),
-        updatedAt: new Date().toISOString(),
-      });
+      // Check for temporary form data when creating a new service
+      try {
+        const tempData = localStorage.getItem(STS_TEMP_SERVICE_FORM_DATA);
+        if (tempData) {
+          const parsedData = JSON.parse(tempData);
+          setFormData({
+            ...parsedData,
+            updatedAt: new Date().toISOString(),
+          });
+        } else {
+          // Always reset form completely when no service is provided (new service)
+          const newId = generateId();
+          setFormData({
+            id: newId,
+            customerPhone: '',
+            address: '',
+            color: 'white',
+            cost: 0,
+            expenses: 0,
+            status: 'ongoing',
+            createdAt: new Date().toISOString(),
+            updatedAt: new Date().toISOString(),
+          });
+        }
+      } catch (error) {
+        console.error('Failed to load temporary form data:', error);
+        // Fallback to empty form
+        const newId = generateId();
+        setFormData({
+          id: newId,
+          customerPhone: '',
+          address: '',
+          color: 'white',
+          cost: 0,
+          expenses: 0,
+          status: 'ongoing',
+          createdAt: new Date().toISOString(),
+          updatedAt: new Date().toISOString(),
+        });
+      }
     }
   }, [service]);
 
@@ -98,6 +128,22 @@ const ServiceForm: React.FC<ServiceFormProps> = ({
         : processedValue,
       updatedAt: new Date().toISOString(),
     }));
+    
+    // Save form data to localStorage for persistence (only for new services)
+    if (!service) {
+      try {
+        const updatedFormData = {
+          ...formData,
+          [name]: name === 'cost' || name === 'expenses'
+            ? parseFloat(processedValue) || 0 
+            : processedValue,
+          updatedAt: new Date().toISOString(),
+        };
+        localStorage.setItem(STS_TEMP_SERVICE_FORM_DATA, JSON.stringify(updatedFormData));
+      } catch (error) {
+        console.error('Failed to save temporary form data:', error);
+      }
+    }
   };
 
   const handleSubmit = (e: React.FormEvent) => {
@@ -106,6 +152,23 @@ const ServiceForm: React.FC<ServiceFormProps> = ({
       ...formData,
       updatedAt: new Date().toISOString(),
     });
+    
+    // Clear temporary form data after successful save
+    try {
+      localStorage.removeItem(STS_TEMP_SERVICE_FORM_DATA);
+    } catch (error) {
+      console.error('Failed to clear temporary form data:', error);
+    }
+  };
+
+  const handleCancel = () => {
+    // Clear temporary form data when canceling
+    try {
+      localStorage.removeItem(STS_TEMP_SERVICE_FORM_DATA);
+    } catch (error) {
+      console.error('Failed to clear temporary form data:', error);
+    }
+    onCancel();
   };
 
   const profit = formData.cost - formData.expenses;
@@ -122,7 +185,7 @@ const ServiceForm: React.FC<ServiceFormProps> = ({
               Servis Kaydını Düzenle
             </h2>
             <button
-              onClick={onCancel}
+              onClick={handleCancel}
               className="text-white hover:bg-white hover:bg-opacity-20 p-1 rounded-md transition-colors min-w-[32px] min-h-[32px] flex items-center justify-center"
             >
               <svg className="h-3.5 w-3.5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
@@ -163,7 +226,7 @@ const ServiceForm: React.FC<ServiceFormProps> = ({
               onChange={handleChange}
               required
               className="w-full px-2.5 py-2 border border-gray-300 rounded-md focus:ring-1 focus:ring-blue-500 focus:border-transparent text-xs min-h-[36px]"
-              placeholder="05XX XXX XX XX"
+              placeholder="05XX XXX XX XX (boşluk kullanabilirsiniz)"
             />
           </div>
 
@@ -311,7 +374,7 @@ const ServiceForm: React.FC<ServiceFormProps> = ({
             </button>
             <button
               type="button"
-              onClick={onCancel}
+              onClick={handleCancel}
               className="px-3 py-2.5 border border-gray-300 rounded-md text-gray-700 hover:bg-gray-50 transition-colors font-medium text-xs min-h-[40px] flex items-center justify-center"
             >
               İptal

@@ -34,10 +34,10 @@ const ServiceDetail: React.FC<ServiceDetailProps> = ({ service, onClose, onEdit 
 
   const getStatusColor = (status: string) => {
     switch (status) {
-      case 'ongoing': return 'bg-yellow-100 text-yellow-800';
-      case 'workshop': return 'bg-orange-100 text-orange-800';
-      case 'completed': return 'bg-green-100 text-green-800';
-      default: return 'bg-gray-100 text-gray-800';
+      case 'ongoing': return 'bg-sky-100 text-sky-800';
+      case 'workshop': return 'bg-blue-100 text-blue-800';
+      case 'completed': return 'bg-blue-100 text-blue-900';
+      default: return 'bg-slate-100 text-slate-800';
     }
   };
 
@@ -72,123 +72,123 @@ const ServiceDetail: React.FC<ServiceDetailProps> = ({ service, onClose, onEdit 
   };
 
   return (
-    <div className="fixed inset-0 bg-black bg-opacity-50 z-50 p-0">
+    <div className="fixed inset-0 bg-slate-900 bg-opacity-60 z-50 p-0">
       <div className="bg-white h-full w-full flex flex-col max-h-screen overflow-hidden">
         {/* Header */}
-        <div className="bg-blue-600 px-3 py-2.5 flex items-center justify-between flex-shrink-0 min-h-[48px]">
-          <h2 className="text-base font-semibold text-white truncate">Servis Detayları</h2>
+        <div className="bg-gradient-to-r from-blue-600 to-blue-700 px-3 py-3 flex items-center justify-between flex-shrink-0 min-h-[52px] shadow-lg">
+          <h2 className="text-lg font-semibold text-white truncate">Servis Detayları</h2>
           <button
             onClick={onClose}
-            className="text-white hover:bg-white hover:bg-opacity-20 p-1.5 rounded min-w-[40px] min-h-[40px] flex items-center justify-center"
+            className="text-white hover:bg-white hover:bg-opacity-20 p-2 rounded-lg transition-all min-w-[44px] min-h-[44px] flex items-center justify-center"
           >
-            <XIcon className="h-4 w-4" />
+            <XIcon className="h-5 w-5" />
           </button>
         </div>
 
         <div className="flex-1 overflow-y-auto overscroll-contain">
-          <div className="p-2 space-y-2 pb-4">
+          <div className="p-3 space-y-3 pb-5">
           {/* Contact Info */}
-          <div className="bg-blue-50 rounded-lg p-2.5 border border-blue-200">
-            <h3 className="text-xs font-medium text-gray-900 mb-2">İletişim</h3>
-            <div className="space-y-2">
+          <div className="bg-gradient-to-br from-blue-50 to-sky-50 rounded-xl p-3 border border-blue-200 shadow-sm">
+            <h3 className="text-sm font-semibold text-slate-800 mb-3">İletişim Bilgileri</h3>
+            <div className="space-y-3">
               <button
                 onClick={handlePhoneClick}
-                className="flex items-center space-x-2 text-blue-600 hover:text-blue-800 bg-white px-3 py-2 rounded border border-blue-200 hover:border-blue-300 transition-all w-full justify-start min-h-[44px]"
+                className="flex items-center space-x-3 text-blue-700 hover:text-blue-900 bg-white px-4 py-3 rounded-lg border border-blue-200 hover:border-blue-300 hover:shadow-md transition-all w-full justify-start min-h-[48px]"
               >
-                <PhoneIcon className="h-4 w-4" />
-                <span className="text-sm font-medium break-all">{service.customerPhone || service.phoneNumber}</span>
+                <PhoneIcon className="h-5 w-5" />
+                <span className="text-base font-semibold break-all">{service.customerPhone || service.phoneNumber}</span>
               </button>
-              <div className="flex items-center space-x-2 text-gray-600 bg-white px-3 py-2 rounded text-xs min-h-[36px]">
-                <CalendarIcon className="h-4 w-4" />
-                <span className="break-words">Tarih: {service.createdAt ? new Date(service.createdAt).toLocaleDateString('tr-TR') : formatDate(service.date || '')}</span>
+              <div className="flex items-center space-x-3 text-slate-600 bg-white px-4 py-3 rounded-lg border border-slate-200 text-sm min-h-[40px]">
+                <CalendarIcon className="h-5 w-5" />
+                <span className="break-words font-medium">Tarih: {service.createdAt ? new Date(service.createdAt).toLocaleDateString('tr-TR') : formatDate(service.date || '')}</span>
               </div>
             </div>
           </div>
 
           {/* Status and Color */}
-          <div className="bg-gray-50 rounded-lg p-2.5">
-            <h3 className="text-xs font-medium text-gray-900 mb-2">Durum</h3>
-            <div className="space-y-2">
-              <div className="flex items-center justify-between bg-white rounded p-2 min-h-[36px]">
-                <div className="flex items-center space-x-2">
-                  <WrenchIcon className="h-4 w-4 text-gray-600" />
-                  <span className="text-xs text-gray-600">Durum:</span>
+          <div className="bg-gradient-to-br from-slate-50 to-blue-50 rounded-xl p-3 shadow-sm">
+            <h3 className="text-sm font-semibold text-slate-800 mb-3">Durum Bilgileri</h3>
+            <div className="space-y-3">
+              <div className="flex items-center justify-between bg-white rounded-lg p-3 min-h-[40px] border border-slate-200">
+                <div className="flex items-center space-x-3">
+                  <WrenchIcon className="h-5 w-5 text-slate-600" />
+                  <span className="text-sm text-slate-600 font-medium">Durum:</span>
                 </div>
-                <span className={`inline-flex px-2 py-1 text-xs font-medium rounded-full ${getStatusColor(service.status)}`}>
+                <span className={`inline-flex px-3 py-1.5 text-sm font-semibold rounded-full ${getStatusColor(service.status)}`}>
                   {getStatusText(service.status)}
                 </span>
               </div>
-              <div className="flex items-center justify-between bg-white rounded p-2 min-h-[36px]">
-                <div className="flex items-center space-x-2">
-                  <PaletteIcon className="h-4 w-4 text-gray-600" />
-                  <span className="text-xs text-gray-600">Renk:</span>
+              <div className="flex items-center justify-between bg-white rounded-lg p-3 min-h-[40px] border border-slate-200">
+                <div className="flex items-center space-x-3">
+                  <PaletteIcon className="h-5 w-5 text-slate-600" />
+                  <span className="text-sm text-slate-600 font-medium">Renk:</span>
                 </div>
-                <div className="flex items-center space-x-2">
-                  <div className={`w-4 h-4 rounded border ${getColorClass(service.color || 'white')}`}></div>
-                  <span className="text-xs text-gray-800">{getColorName(service.color || 'white')}</span>
+                <div className="flex items-center space-x-3">
+                  <div className={`w-5 h-5 rounded-md border-2 ${getColorClass(service.color || 'white')}`}></div>
+                  <span className="text-sm text-slate-800 font-medium">{getColorName(service.color || 'white')}</span>
                 </div>
               </div>
             </div>
           </div>
 
           {/* Address/Description */}
-          <div className="bg-green-50 rounded-lg p-2.5 border border-green-200">
-            <div className="flex items-center space-x-2 mb-2">
-              <MapPinIcon className="h-4 w-4 text-gray-600" />
-              <h3 className="text-xs font-medium text-gray-900">Adres ve Açıklama</h3>
+          <div className="bg-gradient-to-br from-emerald-50 to-blue-50 rounded-xl p-3 border border-emerald-200 shadow-sm">
+            <div className="flex items-center space-x-3 mb-3">
+              <MapPinIcon className="h-5 w-5 text-slate-600" />
+              <h3 className="text-sm font-semibold text-slate-800">Adres ve Açıklama</h3>
             </div>
-            <p className="text-xs text-gray-700 bg-white rounded p-2.5 border break-words whitespace-pre-wrap leading-relaxed min-h-[60px] overflow-wrap-anywhere">
+            <p className="text-sm text-slate-700 bg-white rounded-lg p-3 border border-emerald-200 break-words whitespace-pre-wrap leading-relaxed min-h-[70px] overflow-wrap-anywhere">
               {service.address || service.description}
             </p>
           </div>
 
           {/* Financial Information */}
-          <div className="bg-emerald-50 rounded-lg border border-emerald-200">
-            <div className="flex items-center justify-between p-2.5 cursor-pointer min-h-[44px]" onClick={() => setShowFinancials(!showFinancials)}>
+          <div className="bg-gradient-to-br from-blue-50 to-indigo-50 rounded-xl border border-blue-200 shadow-sm">
+            <div className="flex items-center justify-between p-3 cursor-pointer min-h-[48px]" onClick={() => setShowFinancials(!showFinancials)}>
               <div className="flex items-center">
-                <DollarSignIcon className="h-4 w-4 mr-2" />
-                <h3 className="text-xs font-medium text-gray-900">Finansal Bilgiler</h3>
+                <DollarSignIcon className="h-5 w-5 mr-3" />
+                <h3 className="text-sm font-semibold text-slate-800">Finansal Bilgiler</h3>
               </div>
-              <div className="flex items-center space-x-2">
+              <div className="flex items-center space-x-3">
                 {showFinancials ? (
-                  <EyeOffIcon className="h-4 w-4 text-gray-500" />
+                  <EyeOffIcon className="h-5 w-5 text-slate-500" />
                 ) : (
-                  <EyeIcon className="h-4 w-4 text-gray-500" />
+                  <EyeIcon className="h-5 w-5 text-slate-500" />
                 )}
                 {showFinancials ? (
-                  <ChevronUpIcon className="h-4 w-4 text-gray-500" />
+                  <ChevronUpIcon className="h-5 w-5 text-slate-500" />
                 ) : (
-                  <ChevronDownIcon className="h-4 w-4 text-gray-500" />
+                  <ChevronDownIcon className="h-5 w-5 text-slate-500" />
                 )}
               </div>
             </div>
             
             {showFinancials && (
-              <div className="px-2.5 pb-2.5 space-y-2 border-t border-emerald-200">
-                <div className="grid grid-cols-2 gap-2 mt-2">
-                <div className="bg-white rounded p-2.5 border border-green-200 text-center min-h-[50px] flex flex-col justify-center">
-                  <div className="text-xs text-gray-500">Gelir</div>
-                  <div className="font-bold text-green-600 text-xs break-words">{formatCurrency(cost)}</div>
+              <div className="px-3 pb-3 space-y-3 border-t border-blue-200">
+                <div className="grid grid-cols-2 gap-3 mt-3">
+                <div className="bg-white rounded-lg p-3 border border-green-200 text-center min-h-[55px] flex flex-col justify-center shadow-sm">
+                  <div className="text-sm text-slate-500 font-medium">Gelir</div>
+                  <div className="font-bold text-green-600 text-sm break-words">{formatCurrency(cost)}</div>
                 </div>
-                <div className="bg-white rounded p-2.5 border border-red-200 text-center min-h-[50px] flex flex-col justify-center">
-                  <div className="text-xs text-gray-500">Gider</div>
-                  <div className="font-bold text-red-600 text-xs break-words">{formatCurrency(service.expenses)}</div>
+                <div className="bg-white rounded-lg p-3 border border-red-200 text-center min-h-[55px] flex flex-col justify-center shadow-sm">
+                  <div className="text-sm text-slate-500 font-medium">Gider</div>
+                  <div className="font-bold text-red-600 text-sm break-words">{formatCurrency(service.expenses)}</div>
                 </div>
               </div>
               
-              <div className="bg-white rounded p-2.5 space-y-2 border text-xs">
+              <div className="bg-white rounded-lg p-3 space-y-3 border border-blue-200 text-sm shadow-sm">
                 <div className="flex justify-between items-center">
-                  <span className="text-gray-600">Net Kâr:</span>
-                  <span className={`font-medium break-words ${profit >= 0 ? 'text-blue-600' : 'text-red-600'}`}>
+                  <span className="text-slate-600 font-medium">Net Kâr:</span>
+                  <span className={`font-semibold break-words ${profit >= 0 ? 'text-blue-600' : 'text-red-600'}`}>
                     {formatCurrency(profit)}
                   </span>
                 </div>
                 <div className="flex justify-between items-center">
-                  <span className="text-gray-600">Kâr Payı (%30):</span>
-                  <span className="font-medium text-orange-600 break-words">{formatCurrency(profitPercentage30)}</span>
+                  <span className="text-slate-600 font-medium">Kâr Payı (%30):</span>
+                  <span className="font-semibold text-orange-600 break-words">{formatCurrency(profitPercentage30)}</span>
                 </div>
-                <div className="flex justify-between items-center border-t pt-2">
-                  <span className="text-gray-600">Kalan Tutar:</span>
+                <div className="flex justify-between items-center border-t border-slate-200 pt-3">
+                  <span className="text-slate-600 font-medium">Kalan Tutar:</span>
                   <span className={`font-bold break-words ${netProfit >= 0 ? 'text-green-600' : 'text-red-600'}`}>
                     {formatCurrency(netProfit)}
                   </span>
@@ -200,20 +200,20 @@ const ServiceDetail: React.FC<ServiceDetailProps> = ({ service, onClose, onEdit 
 
           {/* Legacy Parts - only show if exists */}
           {(service.partsChanged || service.missingParts) && (
-            <div className="bg-purple-50 rounded-lg p-2.5 border border-purple-200">
-              <h3 className="text-xs font-medium text-gray-900 mb-2">Ek Bilgiler</h3>
+            <div className="bg-gradient-to-br from-purple-50 to-blue-50 rounded-xl p-3 border border-purple-200 shadow-sm">
+              <h3 className="text-sm font-semibold text-slate-800 mb-3">Ek Bilgiler</h3>
               {service.partsChanged && (
-                <div className="mb-2">
-                  <p className="text-xs text-gray-600 mb-1">Değiştirilen Parçalar:</p>
-                  <p className="text-xs text-gray-700 bg-white rounded p-2.5 border break-words whitespace-pre-wrap">
+                <div className="mb-3">
+                  <p className="text-sm text-slate-600 mb-2 font-medium">Değiştirilen Parçalar:</p>
+                  <p className="text-sm text-slate-700 bg-white rounded-lg p-3 border border-purple-200 break-words whitespace-pre-wrap">
                     {service.partsChanged}
                   </p>
                 </div>
               )}
               {service.missingParts && (
                 <div>
-                  <p className="text-xs text-gray-600 mb-1">Eksik Parçalar:</p>
-                  <p className="text-xs text-gray-700 bg-white rounded p-2.5 border break-words whitespace-pre-wrap">
+                  <p className="text-sm text-slate-600 mb-2 font-medium">Eksik Parçalar:</p>
+                  <p className="text-sm text-slate-700 bg-white rounded-lg p-3 border border-purple-200 break-words whitespace-pre-wrap">
                     {service.missingParts}
                   </p>
                 </div>
@@ -224,17 +224,17 @@ const ServiceDetail: React.FC<ServiceDetailProps> = ({ service, onClose, onEdit 
         </div>
 
         {/* Actions - Fixed at bottom */}
-        <div className="flex-shrink-0 bg-white border-t border-gray-200 p-3 safe-area-inset-bottom">
-          <div className="flex space-x-2">
+        <div className="flex-shrink-0 bg-gradient-to-r from-slate-50 to-blue-50 border-t border-blue-200 p-4 safe-area-inset-bottom shadow-lg">
+          <div className="flex space-x-3">
             <button
               onClick={() => onEdit(service)}
-              className="flex-1 bg-blue-600 text-white py-3 px-4 rounded-lg hover:bg-blue-700 transition-colors text-sm font-medium min-h-[48px] flex items-center justify-center"
+              className="flex-1 bg-gradient-to-r from-blue-600 to-blue-700 text-white py-3 px-4 rounded-xl hover:from-blue-700 hover:to-blue-800 transition-all text-base font-semibold min-h-[52px] flex items-center justify-center shadow-md hover:shadow-lg"
             >
               Düzenle
             </button>
             <button
               onClick={onClose}
-              className="px-4 py-3 border border-gray-300 rounded-lg text-gray-700 hover:bg-gray-50 transition-colors text-sm font-medium min-h-[48px] flex items-center justify-center"
+              className="px-4 py-3 border border-slate-300 rounded-xl text-slate-700 hover:bg-slate-50 hover:border-slate-400 transition-all text-base font-semibold min-h-[52px] flex items-center justify-center shadow-sm hover:shadow-md"
             >
               Kapat
             </button>
