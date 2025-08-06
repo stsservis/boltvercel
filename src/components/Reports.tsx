@@ -417,57 +417,55 @@ export default function Reports({ services, onViewService, onReorderServices }: 
           
           {/* Horizontal Scroll Table */}
           <div className="overflow-x-auto">
-            <div className="min-w-[900px]">
+            <div className="min-w-[1000px]">
               {/* Table Header */}
-              <div className="grid grid-cols-8 gap-2 bg-gray-50 p-2 rounded text-xs font-medium text-gray-700 mb-1">
+              <div className="grid grid-cols-8 gap-2 bg-gradient-to-r from-blue-50 to-indigo-50 p-3 rounded-lg text-xs font-semibold text-gray-800 mb-2 shadow-sm border border-blue-100">
                 <button
                   onClick={() => handleSort('date')}
-                  className="flex items-center justify-between hover:bg-gray-100 p-1 rounded text-left"
+                  className="hover:bg-white/60 p-2 rounded-md text-left transition-all duration-200 hover:shadow-sm"
                 >
-                  <span>Tarih</span>
-                  {getSortIcon('date')}
+                  Tarih
                 </button>
                 <button
                   onClick={() => handleSort('phone')}
-                  className="flex items-center justify-between hover:bg-gray-100 p-1 rounded text-left"
+                  className="hover:bg-white/60 p-2 rounded-md text-left transition-all duration-200 hover:shadow-sm"
                 >
-                  <span>Telefon</span>
-                  {getSortIcon('phone')}
+                  Telefon
                 </button>
                 <button
                   onClick={() => handleSort('address')}
-                  className="flex items-center justify-between hover:bg-gray-100 p-1 rounded text-left col-span-1"
+                  className="hover:bg-white/60 p-2 rounded-md text-left transition-all duration-200 hover:shadow-sm"
                 >
-                  <span>Adres</span>
-                  {getSortIcon('address')}
+                  Adres
                 </button>
                 <button
                   onClick={() => handleSort('revenue')}
-                  className="flex items-center justify-between hover:bg-gray-100 p-1 rounded text-left"
+                  className="hover:bg-white/60 p-2 rounded-md text-right transition-all duration-200 hover:shadow-sm"
                 >
-                  <span>Gelir</span>
-                  {getSortIcon('revenue')}
+                  Gelir
                 </button>
                 <button
                   onClick={() => handleSort('expenses')}
-                  className="flex items-center justify-between hover:bg-gray-100 p-1 rounded text-left"
+                  className="hover:bg-white/60 p-2 rounded-md text-right transition-all duration-200 hover:shadow-sm"
                 >
-                  <span>Gider</span>
-                  {getSortIcon('expenses')}
+                  Gider
                 </button>
                 <button
                   onClick={() => handleSort('profit')}
-                  className="flex items-center justify-between hover:bg-gray-100 p-1 rounded text-left"
+                  className="hover:bg-white/60 p-2 rounded-md text-right transition-all duration-200 hover:shadow-sm"
                 >
-                  <span>Net Kâr</span>
-                  {getSortIcon('profit')}
+                  Net Kâr
+                </button>
+                <button
+                  className="hover:bg-white/60 p-2 rounded-md text-right transition-all duration-200 hover:shadow-sm cursor-default"
+                >
+                  Kâr Payı
                 </button>
                 <button
                   onClick={() => handleSort('remaining')}
-                  className="flex items-center justify-between hover:bg-gray-100 p-1 rounded text-left"
+                  className="hover:bg-white/60 p-2 rounded-md text-right transition-all duration-200 hover:shadow-sm"
                 >
-                  <span>Kalan</span>
-                  {getSortIcon('remaining')}
+                  Kalan
                 </button>
               </div>
               

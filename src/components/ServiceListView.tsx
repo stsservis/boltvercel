@@ -229,42 +229,42 @@ const ServiceListView: React.FC<ServiceListViewProps> = ({
               onDragEnd={handleDragEnd}
               className={`p-3 mb-2 transition-all duration-200 rounded-lg border-l-4 border-r-4 border-t border-b ${colorClasses.border} ${colorClasses.borderLeft} ${colorClasses.borderLeft.replace('border-l-', 'border-r-')} ${colorClasses.bg} shadow-sm hover:shadow-md ${
                 isDragging ? 'opacity-50 transform scale-[1.02] shadow-lg z-10' : ''
-              } ${servicesToShow.length > 1 ? 'cursor-grab active:cursor-grabbing' : 'cursor-pointer'} min-h-[60px]`}
+              } ${servicesToShow.length > 1 ? 'cursor-grab active:cursor-grabbing' : 'cursor-pointer'}`}
             >
               <div className="flex items-start justify-between">
-                <div className="flex items-start space-x-1.5 flex-1 min-w-0">
+                <div className="flex items-start space-x-1.5 flex-1 min-w-0 py-0">
                   <div 
-                    className="flex-1 min-w-0 py-0"
+                    className="flex-1 min-w-0"
                     onClick={() => onViewService(service)}
                   >
-                    <div className="flex items-center space-x-1.5 mb-1">
+                    <div className="flex items-center space-x-1.5 mb-0.5">
                       <button
                         onClick={(e) => {
                           e.stopPropagation();
                           const phone = service.customerPhone || service.phoneNumber || '';
                           handlePhoneClick(phone);
                         }}
-                        className="text-blue-600 hover:text-blue-800 text-sm font-bold transition-all min-h-[32px] flex items-center px-2 py-1 rounded-md hover:bg-blue-100/50"
+                        className="text-blue-600 hover:text-blue-800 text-sm font-bold transition-all flex items-center px-1.5 py-0.5 rounded-md hover:bg-blue-100/50"
                       >
                         {service.customerPhone || service.phoneNumber}
                       </button>
                     </div>
                     
-                    <div className="min-h-[24px] flex items-start">
-                      <p className={`text-sm ${colorClasses.text} line-clamp-2 leading-relaxed break-words overflow-wrap-anywhere`}>
+                    <div className="flex items-start">
+                      <p className={`text-sm ${colorClasses.text} line-clamp-2 leading-snug break-words overflow-wrap-anywhere`}>
                       {service.address || service.description}
                       </p>
                     </div>
                   </div>
                 </div>
                 
-                <div className="flex items-center space-x-0.5 ml-1 mt-0">
+                <div className="flex items-center space-x-0.5 ml-1">
                   <button
                     onClick={(e) => {
                       e.stopPropagation();
                       handleShareService(service);
                     }}
-                    className={`p-1.5 ${colorClasses.text} opacity-60 hover:opacity-100 transition-all rounded-md hover:bg-white/50 min-w-[28px] min-h-[28px] flex items-center justify-center`}
+                    className={`p-1 ${colorClasses.text} opacity-60 hover:opacity-100 transition-all rounded-md hover:bg-white/50 min-w-[24px] min-h-[24px] flex items-center justify-center`}
                   >
                     <ShareIcon className="h-3 w-3" />
                   </button>
@@ -273,7 +273,7 @@ const ServiceListView: React.FC<ServiceListViewProps> = ({
                       e.stopPropagation();
                       onEditService(service);
                     }}
-                    className={`p-1.5 ${colorClasses.text} opacity-60 hover:opacity-100 transition-all rounded-md hover:bg-white/50 min-w-[28px] min-h-[28px] flex items-center justify-center`}
+                    className={`p-1 ${colorClasses.text} opacity-60 hover:opacity-100 transition-all rounded-md hover:bg-white/50 min-w-[24px] min-h-[24px] flex items-center justify-center`}
                   >
                     <EditIcon className="h-3 w-3" />
                   </button>
@@ -282,7 +282,7 @@ const ServiceListView: React.FC<ServiceListViewProps> = ({
                       e.stopPropagation();
                       onDeleteService(service.id);
                     }}
-                    className={`p-1.5 ${colorClasses.text} opacity-60 hover:opacity-100 transition-all rounded-md hover:bg-white/50 min-w-[28px] min-h-[28px] flex items-center justify-center`}
+                    className={`p-1 ${colorClasses.text} opacity-60 hover:opacity-100 transition-all rounded-md hover:bg-white/50 min-w-[24px] min-h-[24px] flex items-center justify-center`}
                   >
                     <TrashIcon className="h-3 w-3" />
                   </button>

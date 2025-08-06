@@ -266,7 +266,7 @@ function App() {
       const url = URL.createObjectURL(blob);
       const link = document.createElement('a');
       link.href = url;
-      link.download = `servis-yedek-${new Date().toISOString().split('T')[0]}.json`;
+      link.download = `boltyedek.json`;
       document.body.appendChild(link);
       link.click();
       document.body.removeChild(link);

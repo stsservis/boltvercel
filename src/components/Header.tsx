@@ -8,15 +8,15 @@ interface HeaderProps {
 
 const Header: React.FC<HeaderProps> = ({ onNavigate, currentPage }) => {
   return (
-    <header className="bg-white shadow-sm border-b border-gray-200 flex-shrink-0">
+    <header className="bg-gradient-to-r from-sky-500 to-blue-900 shimmer rounded-xl shadow-lg border-b border-blue-800 flex-shrink-0 mx-2 mt-2">
       <div className="px-3 py-2">
         {/* Logo and Actions */}
         <div className="flex justify-between items-center">
           <div className="flex items-center space-x-2">
-            <div className="bg-gradient-to-r from-blue-600 to-blue-700 text-white px-2 py-1.5 rounded-md text-xs font-bold min-w-[28px] text-center shadow-sm">
+            <div className="bg-gradient-to-r from-blue-600 to-blue-700 text-white px-3 py-2 rounded-lg text-sm font-extrabold min-w-[32px] text-center shadow-md">
               STS
             </div>
-            <h1 className="text-base font-bold text-gray-900 truncate">Servis Takip</h1>
+            <h1 className="text-lg font-extrabold text-white truncate">Servis Takip</h1>
           </div>
 
           <div className="flex items-center">
@@ -26,9 +26,9 @@ const Header: React.FC<HeaderProps> = ({ onNavigate, currentPage }) => {
                 const event = new CustomEvent('addNewService');
                 window.dispatchEvent(event);
               }}
-              className="bg-gradient-to-r from-blue-600 to-blue-700 text-white px-3 py-2 rounded-md hover:from-blue-700 hover:to-blue-800 transition-all duration-200 flex items-center space-x-1.5 text-xs font-medium min-h-[32px] whitespace-nowrap shadow-sm hover:shadow-md"
+              className="bg-gradient-to-r from-teal-500 to-cyan-600 text-white px-4 py-2.5 rounded-lg hover:from-teal-600 hover:to-cyan-700 transition-all duration-300 flex items-center space-x-2 text-sm font-semibold min-h-[36px] whitespace-nowrap shadow-lg hover:shadow-xl"
             >
-              <PlusIcon className="h-3.5 w-3.5" />
+              <PlusIcon className="h-4 w-4" />
               <span>Yeni Servis</span>
             </button>
           </div>
