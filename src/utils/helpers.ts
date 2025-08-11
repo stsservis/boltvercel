@@ -109,4 +109,33 @@ export const applySavedOrder = (services: ServiceRecord[]): ServiceRecord[] => {
     const orderB = orderMap[b.id] ?? 999999;
     return orderA - orderB;
   });
-}
+};
+
+export const formatPhoneNumberDisplay = (phoneNumber: string): string => {
+  if (!phoneNumber) return '';
+  
+  // Remove all non-digit characters
+  let cleaned = phoneNumber.replace(/\D/g, '');
+  
+  // Handle +90 prefix - replace with 0
+  if (cleaned.startsWith('90') && cleaned.length >= 12) {
+    cleaned = '0' + cleaned.substring(2);
+  }
+  
+  // Ensure it starts with 0 for Turkish numbers
+  if (!cleaned.startsWith('0') && cleaned.length === 10) {
+    cleaned = '0' + cleaned;
+  }
+  
+  // Format as 05XX XXX XX XX
+  if (cleaned.length === 11 && cleaned.startsWith('0')) {
+    return `${cleaned.substring(0, 4)} ${cleaned.substring(4, 7)} ${cleaned.substring(7, 9)} ${cleaned.substring(9, 11)}`;
+  }
+  
+  // If not standard Turkish mobile format, return as is but with basic spacing
+  if (cleaned.length >= 10) {
+    return cleaned.replace(/(\d{4})(\d{3})(\d{2})(\d{2})/, '$1 $2 $3 $4');
+  }
+  
+  return cleaned;
+};

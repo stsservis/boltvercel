@@ -84,17 +84,21 @@ const Dashboard: React.FC<DashboardProps> = ({
       </div>
 
       {/* Navigation Tabs */}
-      <div className="bg-white rounded-md shadow-sm border border-gray-200">
+      <div className="bg-gradient-to-br from-slate-50 via-blue-50 to-indigo-50 rounded-xl shadow-lg border border-blue-100/50 shimmer relative overflow-hidden">
+        {/* Premium background pattern */}
+        <div className="absolute inset-0 bg-gradient-to-r from-blue-600/3 via-indigo-600/3 to-purple-600/3"></div>
+        <div className="absolute inset-0 bg-[url('data:image/svg+xml,%3Csvg width=%2240%22 height=%2240%22 viewBox=%220 0 40 40%22 xmlns=%22http://www.w3.org/2000/svg%22%3E%3Cg fill=%22none%22 fill-rule=%22evenodd%22%3E%3Cg fill=%22%23e0e7ff%22 fill-opacity=%220.08%22%3E%3Cpath d=%22M10 15l3-3 3 3-3 3-3-3zm6 0l3-3 3 3-3 3-3-3z%22/%3E%3C/g%3E%3C/g%3E%3C/svg%3E')] opacity-40"></div>
+        
         <div className="grid grid-cols-4 gap-0.5 p-1">
           <button
             onClick={() => {
               const event = new CustomEvent('navigate', { detail: 'dashboard' });
               window.dispatchEvent(event);
             }}
-            className={`py-1.5 px-1 rounded-sm font-medium text-xs transition-all duration-200 whitespace-nowrap text-center min-h-[32px] flex flex-col items-center justify-center ${
+            className={`relative py-1.5 px-1 rounded-lg font-medium text-xs transition-all duration-300 whitespace-nowrap text-center min-h-[32px] flex flex-col items-center justify-center backdrop-blur-sm ${
               currentPage === 'dashboard'
-                ? 'bg-blue-50 text-blue-600 shadow-sm'
-                : 'text-gray-500 hover:text-gray-700 hover:bg-gray-50'
+                ? 'bg-gradient-to-br from-blue-100/80 to-indigo-100/80 text-blue-700 shadow-md border border-blue-200/50'
+                : 'text-slate-600 hover:text-slate-800 hover:bg-white/60 hover:shadow-sm'
             }`}
           >
             <div className="flex flex-col items-center space-y-0">
@@ -108,10 +112,10 @@ const Dashboard: React.FC<DashboardProps> = ({
               const event = new CustomEvent('navigate', { detail: 'notes' });
               window.dispatchEvent(event);
             }}
-            className={`py-1.5 px-1 rounded-sm font-medium text-xs transition-all duration-200 whitespace-nowrap text-center min-h-[32px] flex flex-col items-center justify-center ${
+            className={`relative py-1.5 px-1 rounded-lg font-medium text-xs transition-all duration-300 whitespace-nowrap text-center min-h-[32px] flex flex-col items-center justify-center backdrop-blur-sm ${
               currentPage === 'notes'
-                ? 'bg-blue-50 text-blue-600 shadow-sm'
-                : 'text-gray-500 hover:text-gray-700 hover:bg-gray-50'
+                ? 'bg-gradient-to-br from-blue-100/80 to-indigo-100/80 text-blue-700 shadow-md border border-blue-200/50'
+                : 'text-slate-600 hover:text-slate-800 hover:bg-white/60 hover:shadow-sm'
             }`}
           >
             <div className="flex flex-col items-center space-y-0">
@@ -127,10 +131,10 @@ const Dashboard: React.FC<DashboardProps> = ({
               const event = new CustomEvent('navigate', { detail: 'reports' });
               window.dispatchEvent(event);
             }}
-            className={`py-1.5 px-1 rounded-sm font-medium text-xs transition-all duration-200 whitespace-nowrap text-center min-h-[32px] flex flex-col items-center justify-center ${
+            className={`relative py-1.5 px-1 rounded-lg font-medium text-xs transition-all duration-300 whitespace-nowrap text-center min-h-[32px] flex flex-col items-center justify-center backdrop-blur-sm ${
               currentPage === 'reports'
-                ? 'bg-blue-50 text-blue-600 shadow-sm'
-                : 'text-gray-500 hover:text-gray-700 hover:bg-gray-50'
+                ? 'bg-gradient-to-br from-blue-100/80 to-indigo-100/80 text-blue-700 shadow-md border border-blue-200/50'
+                : 'text-slate-600 hover:text-slate-800 hover:bg-white/60 hover:shadow-sm'
             }`}
           >
             <div className="flex flex-col items-center space-y-0">
@@ -146,10 +150,10 @@ const Dashboard: React.FC<DashboardProps> = ({
               const event = new CustomEvent('navigate', { detail: 'backup' });
               window.dispatchEvent(event);
             }}
-            className={`py-1.5 px-1 rounded-sm font-medium text-xs transition-all duration-200 whitespace-nowrap text-center min-h-[32px] flex flex-col items-center justify-center ${
+            className={`relative py-1.5 px-1 rounded-lg font-medium text-xs transition-all duration-300 whitespace-nowrap text-center min-h-[32px] flex flex-col items-center justify-center backdrop-blur-sm ${
               currentPage === 'backup'
-                ? 'bg-blue-50 text-blue-600 shadow-sm'
-                : 'text-gray-500 hover:text-gray-700 hover:bg-gray-50'
+                ? 'bg-gradient-to-br from-blue-100/80 to-indigo-100/80 text-blue-700 shadow-md border border-blue-200/50'
+                : 'text-slate-600 hover:text-slate-800 hover:bg-white/60 hover:shadow-sm'
             }`}
           >
             <div className="flex flex-col items-center space-y-0">

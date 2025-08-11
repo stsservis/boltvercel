@@ -7,6 +7,7 @@ import {
   XIcon
 } from 'lucide-react';
 import { ServiceRecord } from '../types';
+import { formatPhoneNumberDisplay } from '../utils/helpers';
 
 interface ServiceListViewProps {
   services: ServiceRecord[];
@@ -227,7 +228,7 @@ const ServiceListView: React.FC<ServiceListViewProps> = ({
               onDragOver={handleDragOver}
               onDrop={(e) => handleDrop(e, index)}
               onDragEnd={handleDragEnd}
-              className={`p-3 mb-2 transition-all duration-200 rounded-lg border-l-4 border-r-4 border-t border-b ${colorClasses.border} ${colorClasses.borderLeft} ${colorClasses.borderLeft.replace('border-l-', 'border-r-')} ${colorClasses.bg} shadow-sm hover:shadow-md ${
+              className={`px-3 py-1.5 mb-1 transition-all duration-200 rounded-lg border-l-4 border-r-4 border-t border-b ${colorClasses.border} ${colorClasses.borderLeft} ${colorClasses.borderLeft.replace('border-l-', 'border-r-')} ${colorClasses.bg} shadow-sm hover:shadow-md ${
                 isDragging ? 'opacity-50 transform scale-[1.02] shadow-lg z-10' : ''
               } ${servicesToShow.length > 1 ? 'cursor-grab active:cursor-grabbing' : 'cursor-pointer'}`}
             >
@@ -237,7 +238,7 @@ const ServiceListView: React.FC<ServiceListViewProps> = ({
                     className="flex-1 min-w-0"
                     onClick={() => onViewService(service)}
                   >
-                    <div className="flex items-center space-x-1.5 mb-0.5">
+                    <div className="flex items-center space-x-1.5 mb-0">
                       <button
                         onClick={(e) => {
                           e.stopPropagation();
@@ -246,7 +247,7 @@ const ServiceListView: React.FC<ServiceListViewProps> = ({
                         }}
                         className="text-blue-600 hover:text-blue-800 text-sm font-bold transition-all flex items-center px-1.5 py-0.5 rounded-md hover:bg-blue-100/50"
                       >
-                        {service.customerPhone || service.phoneNumber}
+                        {formatPhoneNumberDisplay(service.customerPhone || service.phoneNumber || '')}
                       </button>
                     </div>
                     
