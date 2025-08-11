@@ -9,10 +9,13 @@ interface HeaderProps {
 const Header: React.FC<HeaderProps> = ({ onNavigate, currentPage }) => {
   return (
     <div className="px-2 pt-2">
-      <header className="bg-gradient-to-r from-slate-50 via-blue-50 to-indigo-50 shadow-lg border-b border-blue-100/50 flex-shrink-0 relative overflow-hidden rounded-xl shimmer">
+      <header className="bg-gradient-to-r from-slate-50 via-blue-50 to-indigo-50 shadow-lg border-2 border-blue-200/80 flex-shrink-0 relative overflow-hidden rounded-xl">
       {/* Premium Background Pattern */}
       <div className="absolute inset-0 bg-gradient-to-r from-blue-600/5 via-indigo-600/5 to-purple-600/5 z-0"></div>
       <div className="absolute inset-0 bg-[url('data:image/svg+xml,%3Csvg width=%2260%22 height=%2260%22 viewBox=%220 0 60 60%22 xmlns=%22http://www.w3.org/2000/svg%22%3E%3Cg fill=%22none%22 fill-rule=%22evenodd%22%3E%3Cg fill=%22%23e0e7ff%22 fill-opacity=%220.1%22%3E%3Cpath d=%22M15 25l5-5 5 5-5 5-5-5zm10 0l5-5 5 5-5 5-5-5z%22/%3E%3C/g%3E%3C/g%3E%3C/svg%3E')] opacity-30 z-0"></div>
+      
+      {/* Enhanced Shimmer Effect */}
+      <div className="absolute inset-0 bg-gradient-to-r from-transparent via-white/30 to-transparent -translate-x-full animate-shimmer z-10 rounded-xl"></div>
       
       <div className="relative px-4 py-3 z-20">
         {/* Logo and Actions */}

@@ -351,7 +351,7 @@ const ServiceForm: React.FC<ServiceFormProps> = ({
                   </span>
                 </div>
                 <div className="flex justify-between items-center">
-                  <span className="text-gray-600">Kar Payı (%30):</span>
+                  <span className="text-gray-600">Kar Payı (%35):</span>
                   <span className="font-medium text-orange-600 break-words">{formatCurrency(profitPercentage30)}</span>
                 </div>
                 <div className="flex justify-between items-center border-t pt-1.5">

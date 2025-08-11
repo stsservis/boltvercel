@@ -120,14 +120,14 @@ export default function Reports({ services, onViewService, onReorderServices }: 
   const monthlyRevenue = filteredServices.reduce((sum, service) => sum + (service.cost || service.feeCollected || 0), 0);
   const monthlyExpenses = filteredServices.reduce((sum, service) => sum + service.expenses, 0);
   const monthlyNetProfit = monthlyRevenue - monthlyExpenses;  // Gelir - Gider = Net Kâr
-  const monthlyProfitShare = monthlyNetProfit * 0.3;          // Net Kâr × %30 = Kâr Payı
+  const monthlyProfitShare = monthlyNetProfit * 0.35;         // Net Kâr × %35 = Kâr Payı
   const monthlyRemaining = monthlyNetProfit - monthlyProfitShare; // Net Kâr - Kâr Payı = Kalan
 
   // Calculate yearly financial data
   const yearlyRevenue = yearlyServices.reduce((sum, service) => sum + (service.cost || service.feeCollected || 0), 0);
   const yearlyExpenses = yearlyServices.reduce((sum, service) => sum + service.expenses, 0);
   const yearlyNetProfit = yearlyRevenue - yearlyExpenses;     // Gelir - Gider = Net Kâr
-  const yearlyProfitShare = yearlyNetProfit * 0.3;           // Net Kâr × %30 = Kâr Payı
+  const yearlyProfitShare = yearlyNetProfit * 0.35;          // Net Kâr × %35 = Kâr Payı
   const yearlyRemaining = yearlyNetProfit - yearlyProfitShare; // Net Kâr - Kâr Payı = Kalan
 
   const months = [
@@ -309,7 +309,7 @@ export default function Reports({ services, onViewService, onReorderServices }: 
                 </span>
               </div>
               <div className="flex justify-between items-center">
-                <span className="text-gray-600">Kâr Payı (%30):</span>
+                <span className="text-gray-600">Kâr Payı (%35):</span>
                 <span className="font-medium text-orange-600 break-words">{formatCurrency(monthlyProfitShare)}</span>
               </div>
               <div className="flex justify-between items-center border-t pt-1">
@@ -373,7 +373,7 @@ export default function Reports({ services, onViewService, onReorderServices }: 
                 </span>
               </div>
               <div className="flex justify-between items-center">
-                <span className="text-gray-600">Kâr Payı (%30):</span>
+                <span className="text-gray-600">Kâr Payı (%35):</span>
                 <span className="font-medium text-orange-600 break-words">{formatCurrency(yearlyProfitShare)}</span>
               </div>
               <div className="flex justify-between items-center border-t pt-1">
@@ -474,7 +474,7 @@ export default function Reports({ services, onViewService, onReorderServices }: 
                 {filteredServices.map((service) => {
                   const cost = service.cost || service.feeCollected || 0;
                   const profit = cost - service.expenses;
-                  const profitShare = profit * 0.3;
+                  const profitShare = profit * 0.35;
                   const remaining = profit - profitShare; // Kalan = Net Kâr - Kâr Payı
                   const serviceDate = service.createdAt ? new Date(service.createdAt) : new Date(service.date || '');
                   

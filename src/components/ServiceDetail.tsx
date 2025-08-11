@@ -184,7 +184,7 @@ const ServiceDetail: React.FC<ServiceDetailProps> = ({ service, onClose, onEdit 
                   </span>
                 </div>
                 <div className="flex justify-between items-center">
-                  <span className="text-slate-600 font-medium">Kâr Payı (%30):</span>
+                  <span className="text-slate-600 font-medium">Kâr Payı (%35):</span>
                   <span className="font-semibold text-orange-600 break-words">{formatCurrency(profitPercentage30)}</span>
                 </div>
                 <div className="flex justify-between items-center border-t border-slate-200 pt-3">
