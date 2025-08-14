@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import { ServiceRecord } from '../types';
-import { generateId, formatCurrency } from '../utils/helpers';
+import { generateId, formatCurrency, formatPhoneNumberForStorage, extractPhoneFromText } from '../utils/helpers';
 
 const STS_TEMP_SERVICE_FORM_DATA = 'sts_temp_service_form_data';
 
@@ -32,6 +32,7 @@ const ServiceForm: React.FC<ServiceFormProps> = ({
   const [formData, setFormData] = useState<ServiceRecord>({
     id: '',
     customerPhone: '',
+    rawCustomerPhoneInput: '',
     address: '',
     color: 'white',
     cost: 0,
@@ -39,56 +40,57 @@ const ServiceForm: React.FC<ServiceFormProps> = ({
     status: 'ongoing',
     createdAt: new Date().toISOString(),
     updatedAt: new Date().toISOString(),
+    phoneNumberNote: '',
   });
-
-  // Format phone number from +90 to 0 format
-  const formatPhoneNumber = (phone: string): string => {
-    // Only remove dashes and parentheses, keep spaces, letters and numbers
-    let cleaned = phone.replace(/[\-\(\)]/g, '');
-    
-    // If starts with +90, replace with 0
-    if (cleaned.replace(/\s/g, '').startsWith('+90')) {
-      // Remove +90 and add 0, preserving spaces
-      cleaned = cleaned.replace('+90', '0');
-    }
-    
-    return cleaned;
-  };
   
+  const [displayPhoneNumber, setDisplayPhoneNumber] = useState('');
+
   useEffect(() => {
     if (service) {
+      const originalPhone = service.rawCustomerPhoneInput || service.customerPhone || service.phoneNumber || '';
       setFormData({
         ...service,
         // Migrate legacy fields if they exist
-        customerPhone: service.customerPhone || service.phoneNumber || '',
+        customerPhone: formatPhoneNumberForStorage(originalPhone),
+        rawCustomerPhoneInput: service.rawCustomerPhoneInput || service.customerPhone || service.phoneNumber || '',
         address: service.address || service.description || '',
         cost: service.cost || service.feeCollected || 0,
+        phoneNumberNote: service.phoneNumberNote || '',
         updatedAt: new Date().toISOString(),
       });
+      setDisplayPhoneNumber(originalPhone);
     } else {
       // Check for temporary form data when creating a new service
       try {
         const tempData = localStorage.getItem(STS_TEMP_SERVICE_FORM_DATA);
         if (tempData) {
           const parsedData = JSON.parse(tempData);
+          const tempPhone = parsedData.displayPhoneNumber || parsedData.rawCustomerPhoneInput || parsedData.customerPhone || '';
           setFormData({
             ...parsedData,
+            customerPhone: formatPhoneNumberForStorage(tempPhone),
+            rawCustomerPhoneInput: parsedData.rawCustomerPhoneInput || tempPhone,
+            phoneNumberNote: parsedData.phoneNumberNote || '',
             updatedAt: new Date().toISOString(),
           });
+          setDisplayPhoneNumber(tempPhone);
         } else {
           // Always reset form completely when no service is provided (new service)
           const newId = generateId();
           setFormData({
             id: newId,
             customerPhone: '',
+            rawCustomerPhoneInput: '',
             address: '',
             color: 'white',
             cost: 0,
             expenses: 0,
             status: 'ongoing',
+            phoneNumberNote: '',
             createdAt: new Date().toISOString(),
             updatedAt: new Date().toISOString(),
           });
+          setDisplayPhoneNumber('');
         }
       } catch (error) {
         console.error('Failed to load temporary form data:', error);
@@ -97,14 +99,17 @@ const ServiceForm: React.FC<ServiceFormProps> = ({
         setFormData({
           id: newId,
           customerPhone: '',
+          rawCustomerPhoneInput: '',
           address: '',
           color: 'white',
           cost: 0,
           expenses: 0,
           status: 'ongoing',
+          phoneNumberNote: '',
           createdAt: new Date().toISOString(),
           updatedAt: new Date().toISOString(),
         });
+        setDisplayPhoneNumber('');
       }
     }
   }, [service]);
@@ -115,31 +120,33 @@ const ServiceForm: React.FC<ServiceFormProps> = ({
     const { name, value } = e.target;
     
     let processedValue = value;
+    let updatedFormData = { ...formData };
     
     // Format phone number if it's the customerPhone field
     if (name === 'customerPhone') {
-      processedValue = formatPhoneNumber(value);
+      setDisplayPhoneNumber(value); // Store raw input for display
+      const extractedPhone = extractPhoneFromText(value);
+      updatedFormData.customerPhone = extractedPhone;
+      updatedFormData.rawCustomerPhoneInput = value; // Store raw input
+      updatedFormData.updatedAt = new Date().toISOString();
+    } else {
+      updatedFormData[name] = name === 'cost' || name === 'expenses'
+        ? parseFloat(processedValue) || 0 
+        : processedValue;
+      updatedFormData.updatedAt = new Date().toISOString();
     }
     
-    setFormData((prev) => ({
-      ...prev,
-      [name]: name === 'cost' || name === 'expenses'
-        ? parseFloat(processedValue) || 0 
-        : processedValue,
-      updatedAt: new Date().toISOString(),
-    }));
+    setFormData(updatedFormData);
     
     // Save form data to localStorage for persistence (only for new services)
     if (!service) {
       try {
-        const updatedFormData = {
-          ...formData,
-          [name]: name === 'cost' || name === 'expenses'
-            ? parseFloat(processedValue) || 0 
-            : processedValue,
-          updatedAt: new Date().toISOString(),
+        const dataToSave = {
+          ...updatedFormData,
+          rawCustomerPhoneInput: name === 'customerPhone' ? value : updatedFormData.rawCustomerPhoneInput,
+          displayPhoneNumber: name === 'customerPhone' ? value : displayPhoneNumber,
         };
-        localStorage.setItem(STS_TEMP_SERVICE_FORM_DATA, JSON.stringify(updatedFormData));
+        localStorage.setItem(STS_TEMP_SERVICE_FORM_DATA, JSON.stringify(dataToSave));
       } catch (error) {
         console.error('Failed to save temporary form data:', error);
       }
@@ -222,11 +229,11 @@ const ServiceForm: React.FC<ServiceFormProps> = ({
               type="text"
               id="customerPhone"
               name="customerPhone"
-              value={formData.customerPhone}
+              value={displayPhoneNumber}
               onChange={handleChange}
               required
               className="w-full px-2.5 py-2 border border-gray-300 rounded-md focus:ring-1 focus:ring-blue-500 focus:border-transparent text-xs min-h-[36px]"
-              placeholder="05XX XXX XX XX (boşluk kullanabilirsiniz)"
+              placeholder="05XX XXX XX XX veya +90 5XX XXX XX XX (karakter ve sembol kullanabilirsiniz)"
             />
           </div>
 

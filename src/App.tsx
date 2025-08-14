@@ -82,6 +82,7 @@ function App() {
         phoneNumber: service.phoneNumber || service.customerPhone || '',
         description: service.description || service.address || '',
         feeCollected: service.feeCollected || service.cost || 0,
+        phoneNumberNote: service.phoneNumberNote || '',
         date: service.date || service.createdAt || new Date().toISOString().split('T')[0],
       }));
       
@@ -404,7 +405,7 @@ function App() {
           currentPage={page}
         />
         
-        <div className="flex flex-col">
+        <div className="flex flex-col space-y-0.5">
           <Dashboard 
             services={services} 
             missingParts={missingParts}

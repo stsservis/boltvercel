@@ -34,71 +34,69 @@ const Dashboard: React.FC<DashboardProps> = ({
   const completedServices = services.filter(service => service.status === 'completed');
 
   return (
-    <div className="px-2 pt-2 pb-1.5 space-y-1.5">
-      {/* Compact Status Cards */}
-      <div className="grid grid-cols-3 gap-1">
-        <button 
-          onClick={() => onStatusCardClick('ongoing')}
-          className={`bg-gradient-to-br from-sky-300 to-sky-500 shimmer rounded-md p-2 text-white transition-all duration-200 min-h-[50px] shadow-sm hover:shadow-md ${
-            statusFilter === 'ongoing' ? 'ring-2 ring-blue-300 ring-offset-2 scale-105' : 'hover:scale-105'
-          }`}
-        >
-          <div className="flex items-center justify-between">
-            <div>
-              <h3 className="text-xs font-medium opacity-90 leading-tight">Devam Edenler</h3>
-              <p className="text-base font-bold">{ongoingServices.length}</p>
+    <div className="px-4 py-0.5 space-y-0.5">
+      {/* Status Cards with Unified Background */}
+      <div className="header-style-bg dashboard-nav-bg rounded-xl shadow-lg relative overflow-hidden">
+        <div className="grid grid-cols-3 gap-0 p-0.5 relative z-10">
+          <button 
+            onClick={() => onStatusCardClick('ongoing')}
+            className={`relative py-2 px-1 rounded-lg font-medium text-xs transition-all duration-300 whitespace-nowrap text-center min-h-[50px] flex flex-col items-center justify-center ${
+              statusFilter === 'ongoing' 
+                ? 'bg-gradient-to-br from-white/10 to-white/5 text-yellow-200 shadow-md border border-white/30'
+                : 'text-yellow-400 hover:text-yellow-200 hover:bg-white/10 hover:shadow-sm'
+            }`}
+          >
+            <div className="flex flex-col items-center space-y-0">
+              <ClockIcon className="h-3.5 w-3.5" />
+              <span className="leading-tight">Devam Edenler</span>
+              <span className="text-xs font-bold">{ongoingServices.length}</span>
             </div>
-            <ClockIcon className="h-4 w-4 opacity-80" />
-          </div>
-        </button>
+          </button>
 
-        <button 
-          onClick={() => onStatusCardClick('workshop')}
-          className={`bg-gradient-to-br from-blue-500 to-blue-700 shimmer rounded-md p-2 text-white transition-all duration-200 min-h-[50px] shadow-sm hover:shadow-md ${
-            statusFilter === 'workshop' ? 'ring-2 ring-indigo-300 ring-offset-2 scale-105' : 'hover:scale-105'
-          }`}
-        >
-          <div className="flex items-center justify-between">
-            <div>
-              <h3 className="text-xs font-medium opacity-90 leading-tight">Atölyede</h3>
-              <p className="text-base font-bold">{workshopServices.length}</p>
+          <button 
+            onClick={() => onStatusCardClick('workshop')}
+            className={`relative py-2 px-1 rounded-lg font-medium text-xs transition-all duration-300 whitespace-nowrap text-center min-h-[50px] flex flex-col items-center justify-center ${
+              statusFilter === 'workshop' 
+                ? 'bg-gradient-to-br from-white/10 to-white/5 text-orange-200 shadow-md border border-white/30'
+                : 'text-orange-400 hover:text-orange-200 hover:bg-white/10 hover:shadow-sm'
+            }`}
+          >
+            <div className="flex flex-col items-center space-y-0">
+              <WrenchIcon className="h-3.5 w-3.5" />
+              <span className="leading-tight">Atölyede</span>
+              <span className="text-xs font-bold">{workshopServices.length}</span>
             </div>
-            <WrenchIcon className="h-4 w-4 opacity-80" />
-          </div>
-        </button>
+          </button>
 
-        <button 
-          onClick={() => onStatusCardClick('completed')}
-          className={`bg-gradient-to-br from-blue-700 to-blue-900 shimmer rounded-md p-2 text-white transition-all duration-200 min-h-[50px] shadow-sm hover:shadow-md ${
-            statusFilter === 'completed' ? 'ring-2 ring-cyan-300 ring-offset-2 scale-105' : 'hover:scale-105'
-          }`}
-        >
-          <div className="flex items-center justify-between">
-            <div>
-              <h3 className="text-xs font-medium opacity-90 leading-tight">Tamamlanan</h3>
-              <p className="text-base font-bold">{completedServices.length}</p>
+          <button 
+            onClick={() => onStatusCardClick('completed')}
+            className={`relative py-2 px-1 rounded-lg font-medium text-xs transition-all duration-300 whitespace-nowrap text-center min-h-[50px] flex flex-col items-center justify-center ${
+              statusFilter === 'completed' 
+                ? 'bg-gradient-to-br from-white/10 to-white/5 text-green-200 shadow-md border border-white/30'
+                : 'text-green-400 hover:text-green-200 hover:bg-white/10 hover:shadow-sm'
+            }`}
+          >
+            <div className="flex flex-col items-center space-y-0">
+              <CheckCircleIcon className="h-3.5 w-3.5" />
+              <span className="leading-tight">Tamamlanan</span>
+              <span className="text-xs font-bold">{completedServices.length}</span>
             </div>
-            <CheckCircleIcon className="h-4 w-4 opacity-80" />
-          </div>
-        </button>
+          </button>
+        </div>
       </div>
 
       {/* Navigation Tabs */}
-      <div className="bg-gradient-to-br from-slate-50 via-blue-50 to-indigo-50 rounded-xl shadow-lg border border-blue-100/50 shimmer relative overflow-hidden">
-        {/* Premium background pattern */}
-        <div className="absolute inset-0 bg-gradient-to-r from-blue-600/3 via-indigo-600/3 to-purple-600/3"></div>
-        <div className="absolute inset-0 bg-[url('data:image/svg+xml,%3Csvg width=%2240%22 height=%2240%22 viewBox=%220 0 40 40%22 xmlns=%22http://www.w3.org/2000/svg%22%3E%3Cg fill=%22none%22 fill-rule=%22evenodd%22%3E%3Cg fill=%22%23e0e7ff%22 fill-opacity=%220.08%22%3E%3Cpath d=%22M10 15l3-3 3 3-3 3-3-3zm6 0l3-3 3 3-3 3-3-3z%22/%3E%3C/g%3E%3C/g%3E%3C/svg%3E')] opacity-40"></div>
-        
-        <div className="grid grid-cols-4 gap-0.5 p-1">
+      <div className="header-style-bg dashboard-nav-bg rounded-xl shadow-lg relative overflow-hidden">
+        <div className="grid grid-cols-4 gap-0 p-0.5 relative z-10">
           <button
             onClick={() => {
               const event = new CustomEvent('navigate', { detail: 'dashboard' });
               window.dispatchEvent(event);
             }}
-            className={`relative py-1.5 px-1 rounded-lg font-medium text-xs transition-all duration-300 whitespace-nowrap text-center min-h-[32px] flex flex-col items-center justify-center backdrop-blur-sm ${
+            className={`relative py-2 px-1 rounded-lg font-medium text-xs transition-all duration-300 whitespace-nowrap text-center min-h-[50px] flex flex-col items-center justify-center ${
               currentPage === 'dashboard'
-                ? 'bg-gradient-to-br from-blue-100/80 to-indigo-100/80 text-blue-700 shadow-md border border-blue-200/50'
-                : 'text-slate-600 hover:text-slate-800 hover:bg-white/60 hover:shadow-sm'
+                ? 'bg-gradient-to-br from-white/10 to-white/5 text-white shadow-md border border-white/30'
+                : 'text-white/70 hover:text-white hover:bg-white/10 hover:shadow-sm'
             }`}
           >
             <div className="flex flex-col items-center space-y-0">
@@ -112,10 +110,10 @@ const Dashboard: React.FC<DashboardProps> = ({
               const event = new CustomEvent('navigate', { detail: 'notes' });
               window.dispatchEvent(event);
             }}
-            className={`relative py-1.5 px-1 rounded-lg font-medium text-xs transition-all duration-300 whitespace-nowrap text-center min-h-[32px] flex flex-col items-center justify-center backdrop-blur-sm ${
+            className={`relative py-2 px-1 rounded-lg font-medium text-xs transition-all duration-300 whitespace-nowrap text-center min-h-[50px] flex flex-col items-center justify-center ${
               currentPage === 'notes'
-                ? 'bg-gradient-to-br from-blue-100/80 to-indigo-100/80 text-blue-700 shadow-md border border-blue-200/50'
-                : 'text-slate-600 hover:text-slate-800 hover:bg-white/60 hover:shadow-sm'
+                ? 'bg-gradient-to-br from-white/10 to-white/5 text-white shadow-md border border-white/30'
+                : 'text-white/70 hover:text-white hover:bg-white/10 hover:shadow-sm'
             }`}
           >
             <div className="flex flex-col items-center space-y-0">
@@ -131,10 +129,10 @@ const Dashboard: React.FC<DashboardProps> = ({
               const event = new CustomEvent('navigate', { detail: 'reports' });
               window.dispatchEvent(event);
             }}
-            className={`relative py-1.5 px-1 rounded-lg font-medium text-xs transition-all duration-300 whitespace-nowrap text-center min-h-[32px] flex flex-col items-center justify-center backdrop-blur-sm ${
+            className={`relative py-2 px-1 rounded-lg font-medium text-xs transition-all duration-300 whitespace-nowrap text-center min-h-[50px] flex flex-col items-center justify-center ${
               currentPage === 'reports'
-                ? 'bg-gradient-to-br from-blue-100/80 to-indigo-100/80 text-blue-700 shadow-md border border-blue-200/50'
-                : 'text-slate-600 hover:text-slate-800 hover:bg-white/60 hover:shadow-sm'
+                ? 'bg-gradient-to-br from-white/10 to-white/5 text-white shadow-md border border-white/30'
+                : 'text-white/70 hover:text-white hover:bg-white/10 hover:shadow-sm'
             }`}
           >
             <div className="flex flex-col items-center space-y-0">
@@ -150,10 +148,10 @@ const Dashboard: React.FC<DashboardProps> = ({
               const event = new CustomEvent('navigate', { detail: 'backup' });
               window.dispatchEvent(event);
             }}
-            className={`relative py-1.5 px-1 rounded-lg font-medium text-xs transition-all duration-300 whitespace-nowrap text-center min-h-[32px] flex flex-col items-center justify-center backdrop-blur-sm ${
+            className={`relative py-2 px-1 rounded-lg font-medium text-xs transition-all duration-300 whitespace-nowrap text-center min-h-[50px] flex flex-col items-center justify-center ${
               currentPage === 'backup'
-                ? 'bg-gradient-to-br from-blue-100/80 to-indigo-100/80 text-blue-700 shadow-md border border-blue-200/50'
-                : 'text-slate-600 hover:text-slate-800 hover:bg-white/60 hover:shadow-sm'
+                ? 'bg-gradient-to-br from-white/10 to-white/5 text-white shadow-md border border-white/30'
+                : 'text-white/70 hover:text-white hover:bg-white/10 hover:shadow-sm'
             }`}
           >
             <div className="flex flex-col items-center space-y-0">

@@ -96,8 +96,19 @@ const ServiceDetail: React.FC<ServiceDetailProps> = ({ service, onClose, onEdit 
                 className="flex items-center space-x-3 text-blue-700 hover:text-blue-900 bg-white px-4 py-3 rounded-lg border border-blue-200 hover:border-blue-300 hover:shadow-md transition-all w-full justify-start min-h-[48px]"
               >
                 <PhoneIcon className="h-5 w-5" />
-                <span className="text-base font-semibold break-all">{service.customerPhone || service.phoneNumber}</span>
+                <span className="text-base font-semibold break-all">{service.rawCustomerPhoneInput || service.customerPhone || service.phoneNumber}</span>
               </button>
+              {service.phoneNumberNote && (
+                <div className="bg-blue-50 px-4 py-3 rounded-lg border border-blue-200 text-sm min-h-[40px]">
+                  <div className="flex items-center space-x-2 mb-1">
+                    <svg className="h-4 w-4 text-blue-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                      <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M7 8h10M7 12h4m1 8l-4-4H5a2 2 0 01-2-2V6a2 2 0 012-2h14a2 2 0 012 2v8a2 2 0 01-2 2h-1l-4 4z" />
+                    </svg>
+                    <span className="text-blue-700 font-medium">Telefon Notu:</span>
+                  </div>
+                  <p className="text-blue-800 break-words whitespace-pre-wrap leading-snug">{service.phoneNumberNote}</p>
+                </div>
+              )}
               <div className="flex items-center space-x-3 text-slate-600 bg-white px-4 py-3 rounded-lg border border-slate-200 text-sm min-h-[40px]">
                 <CalendarIcon className="h-5 w-5" />
                 <span className="break-words font-medium">Tarih: {service.createdAt ? new Date(service.createdAt).toLocaleDateString('tr-TR') : formatDate(service.date || '')}</span>

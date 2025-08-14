@@ -8,6 +8,7 @@ export interface ServiceRecord {
   status: 'ongoing' | 'completed' | 'workshop';
   createdAt: string;
   updatedAt: string;
+  rawCustomerPhoneInput?: string;
   order?: number;
   date?: string;
   phoneNumber?: string;
@@ -16,6 +17,7 @@ export interface ServiceRecord {
   description?: string;
   partsChanged?: string;
   missingParts?: string;
+  phoneNumberNote?: string;
 }
 
 export interface DashboardStats {

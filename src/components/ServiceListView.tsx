@@ -7,7 +7,7 @@ import {
   XIcon
 } from 'lucide-react';
 import { ServiceRecord } from '../types';
-import { formatPhoneNumberDisplay } from '../utils/helpers';
+import { formatPhoneNumberDisplay, formatPhoneNumberInRawText } from '../utils/helpers';
 
 interface ServiceListViewProps {
   services: ServiceRecord[];
@@ -247,7 +247,10 @@ const ServiceListView: React.FC<ServiceListViewProps> = ({
                         }}
                         className="text-blue-600 hover:text-blue-800 text-sm font-bold transition-all flex items-center px-1.5 py-0.5 rounded-md hover:bg-blue-100/50"
                       >
-                        {formatPhoneNumberDisplay(service.customerPhone || service.phoneNumber || '')}
+                        {service.rawCustomerPhoneInput ? 
+                          formatPhoneNumberInRawText(service.rawCustomerPhoneInput) : 
+                          formatPhoneNumberDisplay(service.customerPhone || service.phoneNumber || '')
+                        }
                       </button>
                     </div>
                     
