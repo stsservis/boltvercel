@@ -7,8 +7,8 @@ interface HeaderProps {
 }
 
 const Header: React.FC<HeaderProps> = ({ onNavigate, currentPage }) => {
-  return (
-    <div className="px-4 py-0.5">
+  return ( 
+    <div className="px-2 py-0.5">
       <header className="header-custom header-style-bg min-h-[50px]">
         <div className="moving-bg" aria-hidden="true"></div>
         <div className="header-content-wrapper">

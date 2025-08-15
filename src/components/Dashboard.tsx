@@ -27,7 +27,7 @@ const Dashboard: React.FC<DashboardProps> = ({
   onStatusCardClick
 }) => {
   const stats = calculateDashboardStats(services);
-  
+
   // Get ongoing services
   const ongoingServices = services.filter(service => service.status === 'ongoing');
   const workshopServices = services.filter(service => service.status === 'workshop');
@@ -35,7 +35,7 @@ const Dashboard: React.FC<DashboardProps> = ({
 
   return (
     <div className="px-4 py-0.5 space-y-0.5">
-      {/* Status Cards with Unified Background */}
+      {/* Status Cards with Unified Background */} 
       <div className="header-style-bg dashboard-nav-bg rounded-xl shadow-lg relative overflow-hidden">
         <div className="grid grid-cols-3 gap-0 p-0.5 relative z-10">
           <button 

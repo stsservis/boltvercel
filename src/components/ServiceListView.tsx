@@ -20,16 +20,16 @@ interface ServiceListViewProps {
 }
 
 const getColorClasses = (color: string) => {
-  const colorMap: { [key: string]: { bg: string; border: string; text: string; borderLeft: string } } = {
-    white: { bg: 'bg-white', border: 'border-gray-200', text: 'text-gray-700', borderLeft: 'border-l-gray-400' },
-    red: { bg: 'bg-red-50', border: 'border-red-200', text: 'text-red-700', borderLeft: 'border-l-red-500' },
-    orange: { bg: 'bg-orange-50', border: 'border-orange-200', text: 'text-orange-700', borderLeft: 'border-l-orange-500' },
-    yellow: { bg: 'bg-yellow-50', border: 'border-yellow-200', text: 'text-yellow-700', borderLeft: 'border-l-yellow-500' },
-    green: { bg: 'bg-green-50', border: 'border-green-200', text: 'text-green-700', borderLeft: 'border-l-green-500' },
-    blue: { bg: 'bg-blue-50', border: 'border-blue-200', text: 'text-blue-700', borderLeft: 'border-l-blue-500' },
-    purple: { bg: 'bg-purple-50', border: 'border-purple-200', text: 'text-purple-700', borderLeft: 'border-l-purple-500' },
-    pink: { bg: 'bg-pink-50', border: 'border-pink-200', text: 'text-pink-700', borderLeft: 'border-l-pink-500' },
-    gray: { bg: 'bg-gray-50', border: 'border-gray-200', text: 'text-gray-700', borderLeft: 'border-l-gray-500' },
+  const colorMap: { [key: string]: { bg: string; border: string; text: string; borderLeft: string; } } = {
+    white: { bg: 'bg-transparent', border: 'border-transparent', text: 'text-gray-200', borderLeft: 'border-l-white' },
+    red: { bg: 'bg-transparent', border: 'border-transparent', text: 'text-red-400', borderLeft: 'border-l-red-500' },
+    orange: { bg: 'bg-transparent', border: 'border-transparent', text: 'text-orange-400', borderLeft: 'border-l-orange-500' },
+    yellow: { bg: 'bg-transparent', border: 'border-transparent', text: 'text-yellow-400', borderLeft: 'border-l-yellow-500' },
+    green: { bg: 'bg-transparent', border: 'border-transparent', text: 'text-green-400', borderLeft: 'border-l-green-500' },
+    blue: { bg: 'bg-transparent', border: 'border-transparent', text: 'text-blue-400', borderLeft: 'border-l-blue-500' },
+    purple: { bg: 'bg-transparent', border: 'border-transparent', text: 'text-purple-400', borderLeft: 'border-l-purple-500' },
+    pink: { bg: 'bg-transparent', border: 'border-transparent', text: 'text-pink-400', borderLeft: 'border-l-pink-500' },
+    gray: { bg: 'bg-transparent', border: 'border-transparent', text: 'text-gray-400', borderLeft: 'border-l-gray-500' },
   };
   return colorMap[color] || colorMap.white;
 };
@@ -182,31 +182,31 @@ const ServiceListView: React.FC<ServiceListViewProps> = ({
   };
 
   return (
-    <div className="flex flex-col bg-transparent">
-      <div className="px-4 py-1.5 border-b border-gray-100 bg-white/80 backdrop-blur-sm">
+    <div className="flex flex-col bg-transparent min-h-screen">
+      <div className="px-4 py-1.5" style={{ backgroundColor: 'transparent !important', boxShadow: 'none !important', border: 'none !important' }}>
         <div className="flex items-center justify-between mb-2">
           <div className="flex items-center space-x-2">
-            <h2 className="text-xs font-semibold text-gray-900 truncate">{getStatusTitle()}</h2>
+            <h2 className="text-xs font-semibold text-white truncate">{getStatusTitle()}</h2>
             {statusFilter !== 'all' && (
               <button
                 onClick={onBackToAll}
-                className="text-xs text-blue-600 hover:text-blue-800 bg-blue-50 px-1.5 py-0.5 rounded-sm whitespace-nowrap"
+                className="text-xs text-blue-200 hover:text-blue-100 bg-blue-800/30 px-1.5 py-0.5 rounded-sm whitespace-nowrap border border-blue-700/50"
               >
                 ← Geri
               </button>
             )}
-          </div>
-          <span className="text-xs text-gray-400 whitespace-nowrap">{servicesToShow.length}</span>
+          </div> 
+          <span className="text-xs text-slate-300 whitespace-nowrap">{servicesToShow.length}</span>
         </div>
         
         {statusFilter !== 'all' && (
           <div className="space-y-1.5">
             <div className="relative">
-              <SearchIcon className="absolute left-2.5 top-1/2 transform -translate-y-1/2 h-3.5 w-3.5 text-gray-400" />
+              <SearchIcon className="absolute left-2.5 top-1/2 transform -translate-y-1/2 h-3.5 w-3.5 text-slate-400" />
               <input
                 type="text"
                 placeholder="Akıllı arama: tarih, telefon, adres veya anahtar kelime..."
-                className="w-full pl-8 pr-2.5 py-2 border border-gray-300 rounded-md focus:ring-1 focus:ring-blue-500 focus:border-transparent text-xs min-h-[36px]"
+                className="w-full pl-8 pr-2.5 py-2 border border-slate-700 rounded-md focus:ring-1 focus:ring-blue-500 focus:border-transparent text-xs min-h-[36px] bg-slate-800 text-white placeholder-slate-400"
                 value={searchTerm}
                 onChange={(e) => setSearchTerm(e.target.value)}
               />
@@ -228,9 +228,9 @@ const ServiceListView: React.FC<ServiceListViewProps> = ({
               onDragOver={handleDragOver}
               onDrop={(e) => handleDrop(e, index)}
               onDragEnd={handleDragEnd}
-              className={`px-3 py-1.5 mb-1 transition-all duration-200 rounded-lg border-l-4 border-r-4 border-t border-b ${colorClasses.border} ${colorClasses.borderLeft} ${colorClasses.borderLeft.replace('border-l-', 'border-r-')} ${colorClasses.bg} shadow-sm hover:shadow-md ${
+              className={`px-3 py-1.5 mb-1 transition-all duration-200 rounded-lg border-l-4 ${colorClasses.borderLeft} ${
                 isDragging ? 'opacity-50 transform scale-[1.02] shadow-lg z-10' : ''
-              } ${servicesToShow.length > 1 ? 'cursor-grab active:cursor-grabbing' : 'cursor-pointer'}`}
+              } ${servicesToShow.length > 1 ? 'cursor-grab active:cursor-grabbing' : 'cursor-pointer'} bg-slate-900/80 backdrop-blur-sm border border-slate-700/50`}
             >
               <div className="flex items-start justify-between">
                 <div className="flex items-start space-x-1.5 flex-1 min-w-0 py-0">
@@ -244,8 +244,8 @@ const ServiceListView: React.FC<ServiceListViewProps> = ({
                           e.stopPropagation();
                           const phone = service.customerPhone || service.phoneNumber || '';
                           handlePhoneClick(phone);
-                        }}
-                        className="text-blue-600 hover:text-blue-800 text-sm font-bold transition-all flex items-center px-1.5 py-0.5 rounded-md hover:bg-blue-100/50"
+                        }} 
+                        className="text-white hover:text-gray-200 text-sm font-bold transition-all flex items-center px-1.5 py-0.5 rounded-md hover:bg-white/10"
                       >
                         {service.rawCustomerPhoneInput ? 
                           formatPhoneNumberInRawText(service.rawCustomerPhoneInput) : 
@@ -254,7 +254,7 @@ const ServiceListView: React.FC<ServiceListViewProps> = ({
                       </button>
                     </div>
                     
-                    <div className="flex items-start">
+                    <div className="flex items-start"> 
                       <p className={`text-sm ${colorClasses.text} line-clamp-2 leading-snug break-words overflow-wrap-anywhere`}>
                       {service.address || service.description}
                       </p>
@@ -268,7 +268,7 @@ const ServiceListView: React.FC<ServiceListViewProps> = ({
                       e.stopPropagation();
                       handleShareService(service);
                     }}
-                    className={`p-1 ${colorClasses.text} opacity-60 hover:opacity-100 transition-all rounded-md hover:bg-white/50 min-w-[24px] min-h-[24px] flex items-center justify-center`}
+                    className={`p-1 text-white opacity-60 hover:opacity-100 transition-all rounded-md hover:bg-white/10 min-w-[24px] min-h-[24px] flex items-center justify-center`}
                   >
                     <ShareIcon className="h-3 w-3" />
                   </button>
@@ -277,7 +277,7 @@ const ServiceListView: React.FC<ServiceListViewProps> = ({
                       e.stopPropagation();
                       onEditService(service);
                     }}
-                    className={`p-1 ${colorClasses.text} opacity-60 hover:opacity-100 transition-all rounded-md hover:bg-white/50 min-w-[24px] min-h-[24px] flex items-center justify-center`}
+                    className={`p-1 text-white opacity-60 hover:opacity-100 transition-all rounded-md hover:bg-white/10 min-w-[24px] min-h-[24px] flex items-center justify-center`}
                   >
                     <EditIcon className="h-3 w-3" />
                   </button>
@@ -286,7 +286,7 @@ const ServiceListView: React.FC<ServiceListViewProps> = ({
                       e.stopPropagation();
                       onDeleteService(service.id);
                     }}
-                    className={`p-1 ${colorClasses.text} opacity-60 hover:opacity-100 transition-all rounded-md hover:bg-white/50 min-w-[24px] min-h-[24px] flex items-center justify-center`}
+                    className={`p-1 text-white opacity-60 hover:opacity-100 transition-all rounded-md hover:bg-white/10 min-w-[24px] min-h-[24px] flex items-center justify-center`}
                   >
                     <TrashIcon className="h-3 w-3" />
                   </button>

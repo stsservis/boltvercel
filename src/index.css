@@ -55,16 +55,10 @@
     user-select: text;
   }
 
-  .app-bg {
-    background-color: #ffffff;
-    background-image: 
-      radial-gradient(circle at 20px 50px, #f1f5f9 1px, transparent 1px),
-      radial-gradient(circle at 80px 20px, #e2e8f0 1px, transparent 1px),
-      radial-gradient(circle at 40px 80px, #f1f5f9 0.5px, transparent 0.5px),
-      radial-gradient(circle at 90px 70px, #e2e8f0 0.5px, transparent 0.5px),
-      radial-gradient(circle at 10px 10px, #f1f5f9 0.5px, transparent 0.5px);
-    background-size: 100px 100px, 120px 120px, 80px 80px, 110px 110px, 90px 90px;
-    background-position: 0 0, 30px 30px, 10px 10px, 50px 50px, 70px 70px;
+  .app-bg { /* Remove background-color and background-image from here */
+    /* background-color: #0a101c; */
+    /* background-image: none; */
+    /* background-size: auto; */
   }
   
   .app-bg::before {
@@ -75,9 +69,12 @@
     right: 0;
     bottom: 0;
     pointer-events: none;
-    z-index: -1;
+    z-index: -1; /* Keep z-index as -1 */
+    background: linear-gradient(135deg, #0f172a, #1e3a8a, #0f172a, #1e3a8a); /* Updated colors for theme */
+    background-size: 800% 800%; /* Increased size for more prominent movement */
+    animation: subtle-gradient-shift 8s ease infinite alternate; /* Faster animation */
   }
-
+ 
   /* Reusable header-style background */
   .header-style-bg {
     position: relative;
@@ -100,8 +97,8 @@
 
   /* Header specific styles */
   .header-custom {
-    position: relative;
-    padding: 16px;
+    position: relative; 
+    padding: 12px;
     border-radius: 0.75rem;
     display: flex;
     justify-content: space-between;
@@ -143,14 +140,14 @@
   }
 
   .brand-text {
-    font-size: 20px;
+    font-size: 18px;
     font-weight: bold;
   }
 
   .header-button {
     background-color: rgba(255,255,255,0.1);
-    border: 1px solid #ffffff55;
-    padding: 8px 16px;
+    border: 1px solid #ffffff55; 
+    padding: 6px 12px;
     border-radius: 8px;
     color: white;
     font-weight: 500;
@@ -170,6 +167,11 @@
   @keyframes shimmer {
     0% { background-position: -200% 0; }
     100% { background-position: 200% 0; }
+  }
+
+  @keyframes subtle-gradient-shift {
+    0% { background-position: 0% 0%; }
+    100% { background-position: 100% 100%; }
   }
 
 }
